@@ -1,0 +1,26 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary Files
+*.tmp
+*.log
+
+# Build artifacts (if any in the future)
+*.zip
+web-ext-artifacts/
+
+# Node modules (if added in the future)
+node_modules/
+
+# Python virtual environment (used for icon generation)
+venv/
+__pycache__/
+*.pyc
