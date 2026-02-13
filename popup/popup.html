@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Our Morning Coffee</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>☕ Our Morning Coffee</h1>
+    </div>
+    
+    <div class="info">
+      <p id="today-info">Loading...</p>
+      <p id="site-count">No sites configured</p>
+    </div>
+    
+    <div class="actions">
+      <button id="open-sites" class="primary-button">Open Today's Sites</button>
+      <button id="add-current" class="secondary-button">Add Current Tab</button>
+    </div>
+    
+    <div class="quick-add">
+      <select id="day-selector">
+        <option value="everyday">Every Day</option>
+        <option value="sunday">Sunday</option>
+        <option value="monday">Monday</option>
+        <option value="tuesday">Tuesday</option>
+        <option value="wednesday">Wednesday</option>
+        <option value="thursday">Thursday</option>
+        <option value="friday">Friday</option>
+        <option value="saturday">Saturday</option>
+      </select>
+    </div>
+    
+    <div class="footer">
+      <a href="#" id="open-options">Manage Sites</a>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "manifest_version": 2,
+  "name": "Our Morning Coffee",
+  "version": "1.0.0",
+  "description": "Open your favorite websites with a single click - organize sites by day of the week for your daily routine",
+  "homepage_url": "https://github.com/nate-double-u/Our-Morning-Coffee",
+  
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "our-morning-coffee@nate-double-u"
+    }
+  },
+  
+  "icons": {
+    "48": "icons/coffee-48.png",
+    "96": "icons/coffee-96.png"
+  },
+  
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications"
+  ],
+  
+  "background": {
+    "scripts": ["background.js"]
+  },
+  
+  "browser_action": {
+    "default_icon": "icons/coffee-48.png",
+    "default_title": "Our Morning Coffee",
+    "default_popup": "popup/popup.html"
+  },
+  
+  "page_action": {
+    "default_icon": "icons/coffee-48.png",
+    "default_title": "Our Morning Coffee",
+    "default_popup": "popup/popup.html",
+    "show_matches": ["<all_urls>"]
+  },
+  
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  
+  "commands": {
+    "open-morning-coffee": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Open today's morning coffee sites"
+    }
+  }
+}
