@@ -137,5 +137,7 @@ function openOptions(e) {
 function openBookmarkableTab(e) {
   e.preventDefault();
   browser.tabs.create({ url: browser.runtime.getURL('popup/popup.html?mode=tab') });
-  window.close();
+  if (!isTabMode) {
+    window.close();
+  }
 }
