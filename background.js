@@ -48,10 +48,6 @@ async function openTodaysSites() {
   const result = await browser.storage.local.get('siteLists');
   const siteLists = normalizeSiteLists(result.siteLists);
   
-  if (!siteLists) {
-    return;
-  }
-  
   // Get current day of the week (0 = Sunday, 6 = Saturday)
   const today = new Date().getDay();
   const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
