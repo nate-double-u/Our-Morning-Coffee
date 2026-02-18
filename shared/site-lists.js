@@ -41,11 +41,12 @@
     const normalized = normalizeSiteLists(siteLists);
     const dayKey = getDayKey(dayIndex);
     const categoryKey = getCategoryKeyForDay(dayIndex);
+    const daySites = dayKey && normalized[dayKey] ? normalized[dayKey] : [];
 
     return [...new Set([
       ...normalized.everyday,
       ...normalized[categoryKey],
-      ...normalized[dayKey]
+      ...daySites
     ])];
   }
 
