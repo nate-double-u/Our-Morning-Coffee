@@ -4,7 +4,7 @@ An open-source Firefox extension that opens your favorite websites with a single
 
 ## Features
 
-- **Daily Website Lists**: Create separate lists for each day of the week (Sunday - Saturday)
+- **Daily Website Lists**: Create lists for Every Day, Weekdays, Weekends, and each day of the week (Sunday - Saturday)
 - **Every Day List**: Sites that open every day, regardless of the day of the week
 - **One-Click Access**: Open all of today's sites with a single click
 - **Bookmark Toolbar Friendly**: Open a bookmarkable tab view with the extension icon favicon
@@ -84,11 +84,11 @@ For permanent installation, the extension needs to be signed by Mozilla:
 
 ## How It Works
 
-Our Morning Coffee stores your website lists locally using Firefox's storage API. Each day of the week has its own list, plus an "Every Day" list for sites you always want to open.
+Our Morning Coffee stores your website lists locally using Firefox's storage API. It supports an "Every Day" list, grouped "Weekdays"/"Weekends" lists, and each day of the week.
 
 When you click "Open Our Morning Coffee" or use the keyboard shortcut:
 1. The extension checks what day it is
-2. It combines the "Every Day" list with today's specific list
+2. It combines the "Every Day" list, today's group list (Weekdays/Weekends), and today's specific day list
 3. All URLs are opened in new tabs (in the background)
 
 ## Privacy

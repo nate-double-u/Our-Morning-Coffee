@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Removed the address bar icon (`page_action`) entry point
 - Added an "Open in Tab" link in the popup to make bookmark toolbar setup easier
+- Added `Weekdays` and `Weekends` site categories that open in addition to today's day list
 
 ## [1.0.0] - 2026-02-12
 

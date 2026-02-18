@@ -2,6 +2,31 @@
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const isTabMode = new URLSearchParams(window.location.search).get('mode') === 'tab';
+const listLabelByKey = {
+  everyday: 'Every Day',
+  weekdays: 'Weekdays',
+  weekends: 'Weekends',
+  sunday: 'Sunday',
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday'
+};
+const validListKeys = Object.keys(listLabelByKey);
+
+function normalizeSiteLists(siteLists = {}) {
+  const normalized = {};
+  for (const key of validListKeys) {
+    normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
+  }
+  return normalized;
+}
+
+function getCategoryKeyForDay(dayIndex) {
+  return dayIndex === 0 || dayIndex === 6 ? 'weekends' : 'weekdays';
+}
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -21,20 +46,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function updatePopupInfo() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   
   // Get current day
   const today = new Date().getDay();
   const todayName = dayNames[today];
   const todayKey = todayName.toLowerCase();
+  const categoryKey = getCategoryKeyForDay(today);
+  const categoryName = listLabelByKey[categoryKey];
   
   // Update today info
   document.getElementById('today-info').textContent = `Today is ${todayName}`;
   
   // Count sites for today
-  const everydayCount = (siteLists.everyday || []).length;
-  const todayCount = (siteLists[todayKey] || []).length;
-  const totalCount = everydayCount + todayCount;
+  const everydayCount = siteLists.everyday.length;
+  const categoryCount = siteLists[categoryKey].length;
+  const todayCount = siteLists[todayKey].length;
+  const totalCount = new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayKey]]).size;
   
   if (totalCount === 0) {
     document.getElementById('site-count').textContent = 'No sites configured for today';
@@ -43,6 +71,9 @@ async function updatePopupInfo() {
     const parts = [];
     if (everydayCount > 0) {
       parts.push(`${everydayCount} everyday`);
+    }
+    if (categoryCount > 0) {
+      parts.push(`${categoryCount} for ${categoryName}`);
     }
     if (todayCount > 0) {
       parts.push(`${todayCount} for ${todayName}`);
@@ -54,14 +85,15 @@ async function updatePopupInfo() {
 
 async function openSites() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   
   // Get current day
   const today = new Date().getDay();
   const todayName = dayNames[today].toLowerCase();
+  const categoryKey = getCategoryKeyForDay(today);
   
   // Combine everyday sites with today's sites
-  const sitesToOpen = [...(siteLists.everyday || []), ...(siteLists[todayName] || [])];
+  const sitesToOpen = [...new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayName]])];
   
   if (sitesToOpen.length === 0) {
     return;
@@ -121,7 +153,7 @@ async function addCurrentTab() {
   await updatePopupInfo();
   
   // Show feedback
-  const dayName = selectedDay === 'everyday' ? 'Every Day' : selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1);
+  const dayName = listLabelByKey[selectedDay] || selectedDay;
   alert(`Added to ${dayName} list!`);
 }
 
