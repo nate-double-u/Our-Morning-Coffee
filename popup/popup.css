@@ -112,3 +112,8 @@ button {
 .footer a:hover {
   text-decoration: underline;
 }
+
+.footer-separator {
+  color: #999;
+  margin: 0 8px;
+}
