@@ -7,6 +7,7 @@ An open-source Firefox extension that opens your favorite websites with a single
 - **Daily Website Lists**: Create separate lists for each day of the week (Sunday - Saturday)
 - **Every Day List**: Sites that open every day, regardless of the day of the week
 - **One-Click Access**: Open all of today's sites with a single click
+- **Bookmark Toolbar Friendly**: Open a bookmarkable tab view with the extension icon favicon
 - **Keyboard Shortcut**: Press `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac) to open today's sites
 - **Easy Management**: Add sites directly from the popup or manage them in the settings page
 - **Import/Export**: Backup and restore your site lists as JSON files
@@ -65,9 +66,10 @@ For permanent installation, the extension needs to be signed by Mozilla:
 1. Click the Our Morning Coffee icon in the toolbar
 2. Click "Open Today's Sites"
 
-**Using the Address Bar Icon:**
-1. Click the Our Morning Coffee icon in the address bar (appears when viewing any web page)
-2. Click "Open Today's Sites"
+**Using a Bookmark Toolbar Shortcut:**
+1. Click the Our Morning Coffee toolbar icon
+2. Click "Open in Tab"
+3. Bookmark that tab to your bookmarks toolbar for quick access
 
 **Using the Keyboard Shortcut:**
 - Windows/Linux: Press `Ctrl+Shift+O`

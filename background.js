@@ -20,21 +20,6 @@ browser.runtime.onInstalled.addListener(async () => {
   }
 });
 
-// Show page action on all tabs
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && !tab.url.startsWith('about:')) {
-    browser.pageAction.show(tabId);
-  }
-});
-
-// Also show page action when a new tab is activated
-browser.tabs.onActivated.addListener(async (activeInfo) => {
-  const tab = await browser.tabs.get(activeInfo.tabId);
-  if (tab.url && !tab.url.startsWith('about:')) {
-    browser.pageAction.show(activeInfo.tabId);
-  }
-});
-
 // Listen for keyboard shortcut
 browser.commands.onCommand.addListener((command) => {
   if (command === 'open-morning-coffee') {

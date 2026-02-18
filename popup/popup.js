@@ -1,6 +1,7 @@
 // Popup script for Our Morning Coffee
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const isTabMode = new URLSearchParams(window.location.search).get('mode') === 'tab';
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('open-sites').addEventListener('click', openSites);
   document.getElementById('add-current').addEventListener('click', addCurrentTab);
   document.getElementById('open-options').addEventListener('click', openOptions);
+  document.getElementById('open-bookmarkable').addEventListener('click', openBookmarkableTab);
   
   // Set default day to today
   const today = new Date().getDay();
@@ -70,8 +72,10 @@ async function openSites() {
     await browser.tabs.create({ url: url, active: false });
   }
   
-  // Close the popup
-  window.close();
+  // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
+  if (!isTabMode) {
+    window.close();
+  }
 }
 
 async function addCurrentTab() {
@@ -124,5 +128,16 @@ async function addCurrentTab() {
 function openOptions(e) {
   e.preventDefault();
   browser.runtime.openOptionsPage();
-  window.close();
+  // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
+  if (!isTabMode) {
+    window.close();
+  }
+}
+
+function openBookmarkableTab(e) {
+  e.preventDefault();
+  browser.tabs.create({ url: browser.runtime.getURL('popup/popup.html?mode=tab') });
+  if (!isTabMode) {
+    window.close();
+  }
 }
