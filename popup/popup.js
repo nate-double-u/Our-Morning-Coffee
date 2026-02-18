@@ -128,7 +128,10 @@ async function addCurrentTab() {
 function openOptions(e) {
   e.preventDefault();
   browser.runtime.openOptionsPage();
-  window.close();
+  // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
+  if (!isTabMode) {
+    window.close();
+  }
 }
 
 function openBookmarkableTab(e) {
