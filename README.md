@@ -121,7 +121,7 @@ Tests use Node's built-in test runner and cover shared site-list logic plus back
 
 ### CI
 
-GitHub Actions runs tests automatically for every pull request and for pushes to `main`/`master` via `.github/workflows/tests.yml`.
+GitHub Actions runs tests automatically for every pull request and for pushes to `main` via `.github/workflows/tests.yml`.
 
 ### File Structure
 
