@@ -1,32 +1,16 @@
 // Background script for Our Morning Coffee extension
 
-const defaultLists = {
-  everyday: [],
-  weekdays: [],
-  weekends: [],
-  sunday: [],
-  monday: [],
-  tuesday: [],
-  wednesday: [],
-  thursday: [],
-  friday: [],
-  saturday: []
-};
-
-function normalizeSiteLists(siteLists = {}) {
-  const normalized = {};
-  for (const key of Object.keys(defaultLists)) {
-    normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
-  }
-  return normalized;
-}
+const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
+  ? OurMorningCoffeeSiteLists
+  : require('./shared/site-lists');
+const { dayKeys, normalizeSiteLists, getSitesToOpen } = siteListsModule;
 
 // Initialize storage with default empty lists if not present
 browser.runtime.onInstalled.addListener(async () => {
   const result = await browser.storage.local.get('siteLists');
 
   if (!result.siteLists) {
-    await browser.storage.local.set({ siteLists: defaultLists });
+    await browser.storage.local.set({ siteLists: normalizeSiteLists() });
     return;
   }
 
@@ -44,19 +28,10 @@ browser.commands.onCommand.addListener((command) => {
 });
 
 // Function to open today's sites
-async function openTodaysSites() {
+async function openTodaysSites(dayIndex = new Date().getDay()) {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists);
-  
-  // Get current day of the week (0 = Sunday, 6 = Saturday)
-  const today = new Date().getDay();
-  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const todayName = dayNames[today];
-  
-  const categoryKey = today === 0 || today === 6 ? 'weekends' : 'weekdays';
-
-  // Combine everyday, grouped category, and today's sites.
-  const sitesToOpen = [...new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayName]])];
+  const sitesToOpen = getSitesToOpen(result.siteLists, dayIndex);
+  const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {
     // Show a notification if no sites are configured
