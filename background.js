@@ -1,22 +1,38 @@
 // Background script for Our Morning Coffee extension
 
+const defaultLists = {
+  everyday: [],
+  weekdays: [],
+  weekends: [],
+  sunday: [],
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+  saturday: []
+};
+
+function normalizeSiteLists(siteLists = {}) {
+  const normalized = {};
+  for (const key of Object.keys(defaultLists)) {
+    normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
+  }
+  return normalized;
+}
+
 // Initialize storage with default empty lists if not present
 browser.runtime.onInstalled.addListener(async () => {
   const result = await browser.storage.local.get('siteLists');
-  
+
   if (!result.siteLists) {
-    const defaultLists = {
-      everyday: [],
-      sunday: [],
-      monday: [],
-      tuesday: [],
-      wednesday: [],
-      thursday: [],
-      friday: [],
-      saturday: []
-    };
-    
     await browser.storage.local.set({ siteLists: defaultLists });
+    return;
+  }
+
+  const normalized = normalizeSiteLists(result.siteLists);
+  if (JSON.stringify(normalized) !== JSON.stringify(result.siteLists)) {
+    await browser.storage.local.set({ siteLists: normalized });
   }
 });
 
@@ -30,19 +46,17 @@ browser.commands.onCommand.addListener((command) => {
 // Function to open today's sites
 async function openTodaysSites() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists;
-  
-  if (!siteLists) {
-    return;
-  }
+  const siteLists = normalizeSiteLists(result.siteLists);
   
   // Get current day of the week (0 = Sunday, 6 = Saturday)
   const today = new Date().getDay();
   const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const todayName = dayNames[today];
   
-  // Combine everyday sites with today's sites
-  const sitesToOpen = [...siteLists.everyday, ...siteLists[todayName]];
+  const categoryKey = today === 0 || today === 6 ? 'weekends' : 'weekdays';
+
+  // Combine everyday, grouped category, and today's sites.
+  const sitesToOpen = [...new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayName]])];
   
   if (sitesToOpen.length === 0) {
     // Show a notification if no sites are configured

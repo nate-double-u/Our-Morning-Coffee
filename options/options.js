@@ -3,6 +3,8 @@
 let currentDay = 'everyday';
 const dayNames = {
   'everyday': 'Every Day',
+  'weekdays': 'Weekdays',
+  'weekends': 'Weekends',
   'sunday': 'Sunday',
   'monday': 'Monday',
   'tuesday': 'Tuesday',
@@ -11,6 +13,15 @@ const dayNames = {
   'friday': 'Friday',
   'saturday': 'Saturday'
 };
+const validDays = ['everyday', 'weekdays', 'weekends', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+function normalizeSiteLists(siteLists = {}) {
+  const normalized = {};
+  for (const day of validDays) {
+    normalized[day] = Array.isArray(siteLists[day]) ? siteLists[day] : [];
+  }
+  return normalized;
+}
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -62,7 +73,7 @@ async function switchTab(day) {
 
 async function loadSites() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   const sites = siteLists[currentDay] || [];
   
   const container = document.getElementById('sites-container');
@@ -129,7 +140,7 @@ async function addSite() {
   
   // Get current site lists
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   
   // Initialize the list if it doesn't exist
   if (!siteLists[currentDay]) {
@@ -160,7 +171,7 @@ async function deleteSite(index) {
   
   // Get current site lists
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   
   // Remove the site
   if (siteLists[currentDay]) {
@@ -176,7 +187,7 @@ async function deleteSite(index) {
 
 async function exportData() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const siteLists = normalizeSiteLists(result.siteLists || {});
   
   const dataStr = JSON.stringify(siteLists, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
@@ -201,7 +212,6 @@ async function importData(event) {
     const importedData = JSON.parse(text);
     
     // Validate the data structure
-    const validDays = ['everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     for (const day of validDays) {
       if (importedData[day] && !Array.isArray(importedData[day])) {
         throw new Error('Invalid data format');
@@ -214,7 +224,7 @@ async function importData(event) {
     }
     
     // Save the imported data
-    await browser.storage.local.set({ siteLists: importedData });
+    await browser.storage.local.set({ siteLists: normalizeSiteLists(importedData) });
     
     // Reload the current view
     await loadSites();
