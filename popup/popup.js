@@ -2,31 +2,12 @@
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const isTabMode = new URLSearchParams(window.location.search).get('mode') === 'tab';
-const listLabelByKey = {
-  everyday: 'Every Day',
-  weekdays: 'Weekdays',
-  weekends: 'Weekends',
-  sunday: 'Sunday',
-  monday: 'Monday',
-  tuesday: 'Tuesday',
-  wednesday: 'Wednesday',
-  thursday: 'Thursday',
-  friday: 'Friday',
-  saturday: 'Saturday'
-};
-const validListKeys = Object.keys(listLabelByKey);
-
-function normalizeSiteLists(siteLists = {}) {
-  const normalized = {};
-  for (const key of validListKeys) {
-    normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
-  }
-  return normalized;
-}
-
-function getCategoryKeyForDay(dayIndex) {
-  return dayIndex === 0 || dayIndex === 6 ? 'weekends' : 'weekdays';
-}
+const {
+  listLabelByKey,
+  normalizeSiteLists,
+  getCategoryKeyForDay,
+  getSitesToOpen
+} = OurMorningCoffeeSiteLists;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -85,15 +66,8 @@ async function updatePopupInfo() {
 
 async function openSites() {
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
-  
-  // Get current day
   const today = new Date().getDay();
-  const todayName = dayNames[today].toLowerCase();
-  const categoryKey = getCategoryKeyForDay(today);
-  
-  // Combine everyday sites with today's sites
-  const sitesToOpen = [...new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayName]])];
+  const sitesToOpen = getSitesToOpen(result.siteLists || {}, today);
   
   if (sitesToOpen.length === 0) {
     return;

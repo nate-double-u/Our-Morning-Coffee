@@ -109,12 +109,28 @@ The extension is built with vanilla JavaScript using Firefox's WebExtension APIs
 
 No build tools are required - the code runs directly in the browser.
 
+### Testing
+
+Run the unit tests with:
+
+```bash
+npm test
+```
+
+Tests use Node's built-in test runner and cover shared site-list logic plus background behavior.
+
+### CI
+
+GitHub Actions runs tests automatically for every pull request and for pushes to `main` via `.github/workflows/tests.yml`.
+
 ### File Structure
 
 ```
 Our-Morning-Coffee/
 ├── manifest.json       # Extension manifest
 ├── background.js       # Background script (handles shortcuts)
+├── shared/             # Shared extension logic
+│   └── site-lists.js
 ├── icons/              # Extension icons
 │   ├── coffee-48.png
 │   └── coffee-96.png
@@ -122,6 +138,9 @@ Our-Morning-Coffee/
 │   ├── popup.html
 │   ├── popup.css
 │   └── popup.js
+├── test/               # Unit tests
+│   ├── background.test.js
+│   └── site-lists.test.js
 └── options/            # Settings page
     ├── options.html
     ├── options.css

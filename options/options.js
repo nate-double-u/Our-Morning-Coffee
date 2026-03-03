@@ -1,27 +1,7 @@
 // Options page script for Our Morning Coffee
 
 let currentDay = 'everyday';
-const dayNames = {
-  'everyday': 'Every Day',
-  'weekdays': 'Weekdays',
-  'weekends': 'Weekends',
-  'sunday': 'Sunday',
-  'monday': 'Monday',
-  'tuesday': 'Tuesday',
-  'wednesday': 'Wednesday',
-  'thursday': 'Thursday',
-  'friday': 'Friday',
-  'saturday': 'Saturday'
-};
-const validDays = ['everyday', 'weekdays', 'weekends', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-
-function normalizeSiteLists(siteLists = {}) {
-  const normalized = {};
-  for (const day of validDays) {
-    normalized[day] = Array.isArray(siteLists[day]) ? siteLists[day] : [];
-  }
-  return normalized;
-}
+const { listLabelByKey: dayNames, validListKeys: validDays, normalizeSiteLists } = OurMorningCoffeeSiteLists;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
