@@ -30,7 +30,7 @@ browser.commands.onCommand.addListener((command) => {
 // Function to open today's sites
 async function openTodaysSites(dayIndex = new Date().getDay()) {
   const result = await browser.storage.local.get('siteLists');
-  const sitesToOpen = getSitesToOpen(result.siteLists, dayIndex);
+  const sitesToOpen = getSitesToOpen(result.siteLists || {}, dayIndex);
   const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {

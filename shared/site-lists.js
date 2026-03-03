@@ -21,7 +21,8 @@
     saturday: 'Saturday'
   };
 
-  function normalizeSiteLists(siteLists = {}) {
+  function normalizeSiteLists(siteLists) {
+    siteLists = siteLists ?? {};
     const normalized = {};
     for (const key of validListKeys) {
       normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
