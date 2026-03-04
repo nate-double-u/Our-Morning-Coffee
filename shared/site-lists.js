@@ -1,9 +1,11 @@
+// Shared site-list logic for Our Morning Coffee extension
+// UMD pattern: CommonJS export for Node tests, global variable for browser
+
 (function initSiteLists(root, factory) {
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = factory();
     return;
   }
-
   root.OurMorningCoffeeSiteLists = factory();
 }(typeof globalThis !== 'undefined' ? globalThis : this, function createSiteListsModule() {
   const dayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];

@@ -20,6 +20,12 @@ test('normalizeSiteLists keeps known lists and drops invalid values', () => {
   assert.equal(normalized.unknown, undefined);
 });
 
+test('normalizeSiteLists handles null input', () => {
+  const normalized = normalizeSiteLists(null);
+  assert.deepEqual(Object.keys(normalized), validListKeys);
+  assert.deepEqual(normalized.everyday, []);
+});
+
 test('getCategoryKeyForDay maps weekends and weekdays correctly', () => {
   assert.equal(getCategoryKeyForDay(0), 'weekends');
   assert.equal(getCategoryKeyForDay(6), 'weekends');

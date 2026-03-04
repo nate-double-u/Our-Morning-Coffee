@@ -19,6 +19,7 @@ web-ext-artifacts/
 
 # Node modules (if added in the future)
 node_modules/
+package-lock.json
 
 # Python virtual environment (used for icon generation)
 venv/
