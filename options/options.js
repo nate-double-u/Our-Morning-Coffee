@@ -29,6 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById('import-file').addEventListener('change', importData);
   
+  // Display version info
+  const manifest = browser.runtime.getManifest();
+  document.getElementById('version-info').textContent = `v${manifest.version}`;
+
   // Load initial data
   await loadSites();
 });
