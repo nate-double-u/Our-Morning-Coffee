@@ -163,6 +163,23 @@ This extension is inspired by the original [Morning Coffee](https://en.wikipedia
 
 Extension icons based on the [Hot Tea Icon](https://uxwing.com/hot-tea-icon/) from UXWing, resized using [MyImageTools](https://myimagetools.com) online conversion tool. UXWing icons are free for personal and commercial use without attribution, but we're happy to credit them for their excellent work.
 
+## FAQ
+
+### I can't find the extension icon in my toolbar
+
+Firefox doesn't show extensions in the "Customize Toolbar" menu the way it does for built-in features. This is a Firefox limitation, not a bug in Our Morning Coffee.
+
+If you missed the prompt to pin the icon during installation:
+
+1. Open `about:addons` in your browser
+2. Find **Our Morning Coffee** in the list
+3. Click the three-dot menu (⋯) and select **Pin to Toolbar**
+
+You can also access your sites without the toolbar icon using:
+
+- **Keyboard shortcut**: `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac)
+- **Bookmark shortcut**: Click the extension icon → "Open in Tab" → bookmark that tab
+
 ## Support
 
 If you encounter any issues or have suggestions, please [open an issue](https://github.com/nate-double-u/Our-Morning-Coffee/issues) on GitHub.
