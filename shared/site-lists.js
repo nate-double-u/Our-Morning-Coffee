@@ -27,7 +27,9 @@
     siteLists = siteLists ?? {};
     const normalized = {};
     for (const key of validListKeys) {
-      normalized[key] = Array.isArray(siteLists[key]) ? siteLists[key] : [];
+      normalized[key] = Array.isArray(siteLists[key])
+        ? siteLists[key].filter(item => typeof item === 'string')
+        : [];
     }
     return normalized;
   }
