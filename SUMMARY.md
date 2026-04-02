@@ -1,8 +1,8 @@
-# Our Morning Coffee - Development Summary
+# Our Morning Coffee — Development Summary
 
-## What Was Built
+## Overview
 
-A complete, production-ready Firefox extension called "Our Morning Coffee" that replicates and modernizes the classic "Morning Coffee" extension functionality.
+A Firefox extension that modernizes the classic "Morning Coffee" concept: organize your daily websites by day of the week and open them all with one click.
 
 ## Key Features
 
@@ -44,7 +44,7 @@ A complete, production-ready Firefox extension called "Our Morning Coffee" that 
 - Vanilla JavaScript (ES6+)
 - Firefox WebExtension APIs
 - CSS3 with modern features
-- No build tools or dependencies required
+- No bundlers, transpilers, or runtime dependencies
 
 **Browser APIs:**
 - `browser.storage.local` - Local data storage
@@ -66,115 +66,30 @@ A complete, production-ready Firefox extension called "Our Morning Coffee" that 
 ### Quality Assurance
 
 **Validation:**
-- ✅ Passes `web-ext lint` (0 errors, 1 optional warning)
-- ✅ Builds successfully with `web-ext build`
-- ✅ Code review completed - all issues resolved
-- ✅ Security scan (CodeQL) - no vulnerabilities
-- ✅ Well-structured, maintainable code
+- ✅ Passes `npx web-ext lint`
+- ✅ Builds successfully with `npx web-ext build`
+- ✅ Unit tests via `npm test`
 
-### File Statistics
+### Code Quality
 
-```
-Total Files: 16
-- JavaScript: 3 files (background.js, popup.js, options.js)
-- HTML: 2 files (popup.html, options.html)
-- CSS: 2 files (popup.css, options.css)
-- Images: 3 files (SVG + 2 PNGs)
-- Documentation: 5 files
-- Configuration: 1 file (manifest.json)
-```
-
-### Code Characteristics
-
-**Clean & Maintainable:**
-- Meaningful variable names
+- Readable, unminified source
 - Consistent formatting
-- Well-commented functions
 - Modular structure
-- No code duplication
-
-**Trustworthy:**
-- No minification or obfuscation
-- All code is readable
 - No external dependencies
-- No hidden functionality
-- Open source license
 
-## Installation Methods
+## Possible Future Work
 
-### For Development/Testing
-1. Load as temporary add-on in Firefox
-2. Navigate to `about:debugging`
-3. Select "Load Temporary Add-on"
-4. Choose `manifest.json`
-
-### For Distribution
-1. Package: `npx web-ext build`
-2. Submit to Mozilla Add-ons for signing
-3. Users install from addons.mozilla.org
-
-## Future Enhancement Possibilities
-
-While the extension is complete as-is, potential enhancements could include:
 - Customizable keyboard shortcuts in UI
 - Tab randomization option
-- Site organization (drag-and-drop reordering)
+- Drag-and-drop site reordering
 - Site categories/folders
 - Time-based automation
 - Multiple profiles
-- Sync across devices (optional)
-- Dark mode theme
-
-## Success Criteria Met
-
-✅ Fully functional Firefox extension
-✅ Open source and trustable
-✅ Privacy-focused (no data collection)
-✅ Well-documented
-✅ Production-ready quality
-✅ Passes all validation and security checks
-✅ Easy to install and use
-✅ No external dependencies
-
-## Repository Structure
-
-```
-Our-Morning-Coffee/
-├── .gitignore              # Git ignore rules
-├── CHANGELOG.md            # Version history
-├── CONTRIBUTING.md         # Contribution guide
-├── LICENSE-APACHE-2.0      # Apache 2.0 license (code)
-├── LICENSE-CC-BY-4.0       # CC-BY-4.0 license (documentation)
-├── README.md               # Main documentation
-├── SCREENSHOTS.md          # Visual guide
-├── SUMMARY.md              # This file
-├── manifest.json           # Extension manifest
-├── background.js           # Background script
-├── icons/                  # Extension icons
-│   ├── coffee-48.png
-│   ├── coffee-48.svg
-│   └── coffee-96.png
-├── popup/                  # Popup UI
-│   ├── popup.html
-│   ├── popup.css
-│   └── popup.js
-└── options/                # Settings page
-    ├── options.html
-    ├── options.css
-    └── options.js
-```
-
-## Package Details
-
-**Extension Package:**
-- Name: our_morning_coffee-1.0.0.zip
-- Size: ~45 KB
-- Format: Standard Firefox extension package
-- Ready for submission to Mozilla Add-ons
+- Cross-device sync (optional)
+- Dark mode
 
 ---
 
-**Project Status:** ✅ Complete and Ready for Production
 **Version:** 1.0.0
 **License:** Apache-2.0 (code) / CC-BY-4.0 (documentation)
 **Author:** nate-double-u

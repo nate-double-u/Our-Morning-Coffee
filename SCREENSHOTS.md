@@ -1,4 +1,4 @@
-# Screenshots and Visual Guide
+# Visual Guide
 
 ## Extension Popup
 
@@ -37,7 +37,7 @@ The settings page provides full control over your site lists:
 - Team standup notes: https://notion.so
 
 **Wednesday:**
-- Mid-week reports: https://analytics.yourcompany.com
+- Mid-week reports: https://example.com/analytics
 
 **Friday:**
 - Time tracking: https://toggl.com
