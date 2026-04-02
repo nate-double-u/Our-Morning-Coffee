@@ -16,7 +16,6 @@ If you find a bug, please open an issue with:
 - Expected behavior
 - Actual behavior
 - Firefox version and operating system
-- Screenshots if applicable
 
 ### Suggesting Features
 
