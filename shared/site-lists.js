@@ -28,7 +28,10 @@
     const normalized = {};
     for (const key of validListKeys) {
       normalized[key] = Array.isArray(siteLists[key])
-        ? siteLists[key].filter(item => typeof item === 'string')
+        ? siteLists[key]
+          .filter(item => typeof item === 'string')
+          .map(item => item.trim())
+          .filter(item => item.length > 0)
         : [];
     }
     return normalized;
