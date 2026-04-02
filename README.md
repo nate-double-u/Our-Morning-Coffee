@@ -133,7 +133,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## License
 
-Project documentation (including this README, CHANGELOG, user guides, and screenshots) is licensed under [CC-BY-4.0](LICENSE-CC-BY-4.0).
+Project documentation (including this README, CHANGELOG, and user guides) is licensed under [CC-BY-4.0](LICENSE-CC-BY-4.0).
 All original source code files (including JS, HTML, CSS, JSON, and test files) are licensed under [Apache-2.0](LICENSE-APACHE-2.0).
 Third-party assets (such as the UXWing icons described below) are governed by their own licenses.
 
