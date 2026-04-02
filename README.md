@@ -127,30 +127,6 @@ Tests use Node's built-in test runner and cover shared site-list logic plus back
 
 GitHub Actions runs tests automatically for every pull request and for pushes to `main` via `.github/workflows/tests.yml`.
 
-### File Structure
-
-```
-Our-Morning-Coffee/
-├── manifest.json       # Extension manifest
-├── background.js       # Background script (handles shortcuts)
-├── shared/             # Shared extension logic
-│   └── site-lists.js
-├── icons/              # Extension icons
-│   ├── coffee-48.png
-│   └── coffee-96.png
-├── popup/              # Popup UI
-│   ├── popup.html
-│   ├── popup.css
-│   └── popup.js
-├── test/               # Unit tests
-│   ├── background.test.js
-│   └── site-lists.test.js
-└── options/            # Settings page
-    ├── options.html
-    ├── options.css
-    └── options.js
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
@@ -168,24 +144,6 @@ This extension is inspired by the original [Morning Coffee](https://en.wikipedia
 ## Icons
 
 Extension icons based on the [Hot Tea Icon](https://uxwing.com/hot-tea-icon/) from UXWing, resized using [MyImageTools](https://myimagetools.com). See [`icons/README.md`](icons/README.md) for license details.
-
-## FAQ
-
-### I can't find the extension icon in my toolbar
-
-Firefox doesn't show extensions in the "Customize Toolbar" menu the way it does for built-in features. This is a Firefox limitation, not a bug in Our Morning Coffee.
-
-If you missed the prompt to pin the icon during installation:
-
-1. Open `about:addons` in your browser
-2. Find **Our Morning Coffee** in the list
-3. Click the three-dot menu (⋯) and select **Pin to Toolbar**
-
-You can also open your sites without the toolbar icon using the keyboard shortcut:
-
-- `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac)
-
-Once you've re-pinned the icon, you can set up a one-click bookmark shortcut too — see [Using a Bookmark Toolbar Shortcut](#using-a-bookmark-toolbar-shortcut) above.
 
 ## Support
 

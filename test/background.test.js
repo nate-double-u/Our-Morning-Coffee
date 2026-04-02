@@ -54,13 +54,13 @@ function makeBrowserMock({ getResult }) {
 
 function loadBackgroundWithBrowser(browserMock) {
   global.browser = browserMock;
-  delete require.cache[require.resolve('../background')];
-  return require('../background');
+  delete require.cache[require.resolve('../background/background')];
+  return require('../background/background');
 }
 
 test.afterEach(() => {
   delete global.browser;
-  delete require.cache[require.resolve('../background')];
+  delete require.cache[require.resolve('../background/background')];
 });
 
 test('openTodaysSites opens combined deduplicated weekday sites and sends success notification', async () => {
