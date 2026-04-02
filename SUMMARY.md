@@ -176,6 +176,6 @@ Our-Morning-Coffee/
 
 **Project Status:** ✅ Complete and Ready for Production
 **Version:** 1.0.0
-**License:** Apache License 2.0
+**License:** Apache-2.0 (code) / CC-BY-4.0 (documentation)
 **Author:** nate-double-u
 **Repository:** https://github.com/nate-double-u/Our-Morning-Coffee
