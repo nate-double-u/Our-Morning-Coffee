@@ -28,6 +28,13 @@ test('normalizeSiteLists filters out non-string values', () => {
   assert.deepEqual(normalized.everyday, ['https://valid.com']);
 });
 
+test('normalizeSiteLists trims and filters empty strings', () => {
+  const normalized = normalizeSiteLists({
+    everyday: ['', 'https://valid.com', '   ', '  https://trimmed.com  ']
+  });
+  assert.deepEqual(normalized.everyday, ['https://valid.com', 'https://trimmed.com']);
+});
+
 test('normalizeSiteLists handles null input', () => {
   const normalized = normalizeSiteLists(null);
   assert.deepEqual(Object.keys(normalized), validListKeys);
