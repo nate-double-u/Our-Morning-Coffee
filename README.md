@@ -25,17 +25,17 @@ Install directly from the [Mozilla Add-ons page](https://addons.mozilla.org/en-C
 1. Clone this repository:
    ```bash
    git clone https://github.com/nate-double-u/Our-Morning-Coffee.git
+   cd Our-Morning-Coffee
    ```
 
-2. Open Firefox and navigate to `about:debugging`
+2. Launch Firefox with the extension loaded:
+   ```bash
+   npx web-ext run
+   ```
 
-3. Click "This Firefox" in the left sidebar
+   This opens a clean Firefox profile with the extension installed and the toolbar button visible. The extension reloads automatically when you edit source files.
 
-4. Click "Load Temporary Add-on"
-
-5. Navigate to the extension directory and select the `manifest.json` file
-
-The extension will now be loaded temporarily (until you restart Firefox).
+   Alternatively, you can load the extension manually via `about:debugging` → "This Firefox" → "Load Temporary Add-on" → select `manifest.json`.
 
 ### Building and Signing
 
@@ -111,7 +111,7 @@ The extension is built with vanilla JavaScript using Firefox's WebExtension APIs
 - `browser.commands` - For keyboard shortcuts
 - `browser.notifications` - For user feedback
 
-No bundlers or transpilers are needed — the code runs directly in the browser. The `web-ext` CLI is only used for packaging and signing.
+No bundlers or transpilers are needed — the code runs directly in the browser. The `web-ext` CLI is used for local development (`npx web-ext run`), linting, and packaging.
 
 ### Testing
 
