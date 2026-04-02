@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the address bar icon (`page_action`) entry point
 - Added an "Open in Tab" link in the popup to make bookmark toolbar setup easier
 - Added `Weekdays` and `Weekends` site categories that open in addition to today's day list
+- Normalized keyboard shortcut to `Ctrl+Shift+U` / `Cmd+Shift+U` across all platforms (previously conflicted with Firefox built-ins)
 
 ## [1.0.0] - 2026-02-12
 

@@ -8,7 +8,7 @@ An open-source Firefox extension that opens your favorite websites with a single
 - **Every Day List**: Sites that open every day, regardless of the day of the week
 - **One-Click Access**: Open all of today's sites with a single click
 - **Bookmark Toolbar Friendly**: Open a bookmarkable tab view with the extension icon favicon
-- **Keyboard Shortcut**: Press `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac) to open today's sites
+- **Keyboard Shortcut**: Press `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac) to open today's sites
 - **Easy Management**: Add sites directly from the popup or manage them in the settings page
 - **Import/Export**: Backup and restore your site lists as JSON files
 - **Privacy-Focused**: All data is stored locally in your browser
@@ -76,8 +76,8 @@ For permanent installation, the extension needs to be signed by Mozilla:
 3. Bookmark that tab to your bookmarks toolbar for quick access
 
 **Using the Keyboard Shortcut:**
-- Windows/Linux: Press `Ctrl+Shift+O`
-- Mac: Press `Command+Shift+M` (or `Cmd+Shift+M`)
+- Windows/Linux: Press `Ctrl+Shift+U`
+- Mac: Press `Cmd+Shift+U`
 
 ### Managing Your Lists
 
@@ -183,7 +183,7 @@ If you missed the prompt to pin the icon during installation:
 
 You can also open your sites without the toolbar icon using the keyboard shortcut:
 
-- `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac)
+- `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac)
 
 Once you've re-pinned the icon, you can set up a one-click bookmark shortcut too — see [Using a Bookmark Toolbar Shortcut](#using-a-bookmark-toolbar-shortcut) above.
 

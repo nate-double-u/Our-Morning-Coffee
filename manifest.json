@@ -44,8 +44,8 @@
   "commands": {
     "open-morning-coffee": {
       "suggested_key": {
-        "default": "Ctrl+Shift+O",
-        "mac": "Command+Shift+M"
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
       },
       "description": "Open today's morning coffee sites"
     }
