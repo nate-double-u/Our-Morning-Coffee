@@ -1,12 +1,12 @@
 # ☕ Our Morning Coffee
 
-An open-source Firefox extension that opens your favorite websites with a single click. Organize sites by day of the week to automate your daily browsing routine.
+An open-source Firefox extension that opens your favorite websites each morning. Organize sites by day of the week to automate your daily browsing routine.
 
 ## Features
 
 - **Daily Website Lists**: Create lists for Every Day, Weekdays, Weekends, and each day of the week (Sunday - Saturday)
 - **Every Day List**: Sites that open every day, regardless of the day of the week
-- **One-Click Access**: Open all of today's sites with a single click
+- **Quick Access**: Open all of today's sites from the popup or with a keyboard shortcut
 - **Bookmark Toolbar Friendly**: Open in a bookmarkable tab for quick toolbar access
 - **Keyboard Shortcut**: Press `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac) to open today's sites
 - **Easy Management**: Add sites directly from the popup or manage them in the settings page
