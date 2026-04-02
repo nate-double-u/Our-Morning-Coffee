@@ -46,7 +46,7 @@ The settings page provides full control over your site lists:
 ### Workflow
 
 1. **Monday morning at 9am:**
-   - Click the Our Morning Coffee icon or press Ctrl+Shift+O (Windows/Linux) or Cmd+Shift+M (Mac)
+   - Click the Our Morning Coffee icon or press Ctrl+Shift+U (Windows/Linux) or Cmd+Shift+U (Mac)
    - Extension opens: Gmail, Calendar, News (every day) + Linear and Notion (Monday)
    - All 5 tabs open automatically
 
@@ -63,8 +63,8 @@ The settings page provides full control over your site lists:
 
 ## Keyboard Shortcut
 
-- Windows/Linux: `Ctrl+Shift+O`
-- Mac: `Cmd+Shift+M`
+- Windows/Linux: `Ctrl+Shift+U`
+- Mac: `Cmd+Shift+U`
 
 You can change this in Firefox:
 1. Go to `about:addons`

@@ -11,7 +11,7 @@ A complete, production-ready Firefox extension called "Our Morning Coffee" that 
    - 8 separate lists: Every Day + 7 days of the week
    - Quick add from current tab
    - One-click opening of all sites
-   - Keyboard shortcut (Ctrl+Shift+O on Windows/Linux, Cmd+Shift+M on Mac)
+   - Keyboard shortcut (Ctrl+Shift+U on Windows/Linux, Cmd+Shift+U on Mac)
 
 2. **User Interface**
    - Clean, modern popup interface
