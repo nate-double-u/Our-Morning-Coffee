@@ -2,7 +2,7 @@
 
 const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
   ? OurMorningCoffeeSiteLists
-  : require('./shared/site-lists');
+  : require('../shared/site-lists');
 const { dayKeys, normalizeSiteLists, getSitesToOpen } = siteListsModule;
 
 // Initialize storage with default empty lists if not present

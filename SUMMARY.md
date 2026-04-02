@@ -35,7 +35,7 @@ A Firefox extension that modernizes the classic "Morning Coffee" concept: organi
 
 **Core Files:**
 - `manifest.json` - Extension configuration (WebExtension API v2)
-- `background.js` - Background script for keyboard shortcuts
+- `background/background.js` - Background script for keyboard shortcuts
 - `popup/` - Browser action popup (HTML/CSS/JS)
 - `options/` - Settings page (HTML/CSS/JS)
 - `icons/` - Extension icons (PNG + SVG)
