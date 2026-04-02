@@ -16,6 +16,10 @@ An open-source Firefox extension that opens your favorite websites with a single
 
 ## Installation
 
+### From Mozilla Add-ons
+
+Install directly from the [Mozilla Add-ons page](https://addons.mozilla.org/en-CA/firefox/addon/our-morning-coffee/).
+
 ### From Source (Development)
 
 1. Clone this repository:
