@@ -118,4 +118,4 @@ If you have questions, feel free to:
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
+By contributing, you agree that your contributions will be licensed under the project's dual-license terms: [Apache-2.0](LICENSE-APACHE-2.0) for code and [CC-BY-4.0](LICENSE-CC-BY-4.0) for documentation.

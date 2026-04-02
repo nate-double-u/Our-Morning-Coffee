@@ -60,7 +60,8 @@ A complete, production-ready Firefox extension called "Our Morning Coffee" that 
 2. `CONTRIBUTING.md` - Developer contribution guidelines
 3. `CHANGELOG.md` - Version history
 4. `SCREENSHOTS.md` - Visual guide and examples
-5. `LICENSE` - Apache 2.0 license
+5. `LICENSE-APACHE-2.0` - Apache 2.0 license (code)
+6. `LICENSE-CC-BY-4.0` - CC-BY-4.0 license (documentation)
 
 ### Quality Assurance
 
@@ -142,7 +143,8 @@ Our-Morning-Coffee/
 ├── .gitignore              # Git ignore rules
 ├── CHANGELOG.md            # Version history
 ├── CONTRIBUTING.md         # Contribution guide
-├── LICENSE                 # Apache 2.0 license
+├── LICENSE-APACHE-2.0      # Apache 2.0 license (code)
+├── LICENSE-CC-BY-4.0       # CC-BY-4.0 license (documentation)
 ├── README.md               # Main documentation
 ├── SCREENSHOTS.md          # Visual guide
 ├── SUMMARY.md              # This file
