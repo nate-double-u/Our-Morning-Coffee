@@ -47,9 +47,12 @@ Feature suggestions are welcome! Please open an issue with:
 
 5. **Test the extension**:
    ```bash
+   # Run in a clean Firefox profile (auto-reloads on file changes)
+   npx web-ext run
+
    # Validate the extension
    npx web-ext lint
-   
+
    # Build the extension
    npx web-ext build
    ```
@@ -80,7 +83,7 @@ Feature suggestions are welcome! Please open an issue with:
 
 Before submitting a PR:
 
-1. Load the extension in Firefox (`about:debugging`)
+1. Test the extension in a clean Firefox profile (`npx web-ext run`)
 2. Test all features:
    - Adding sites
    - Opening sites
