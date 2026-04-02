@@ -90,7 +90,7 @@ A Firefox extension that modernizes the classic "Morning Coffee" concept: organi
 
 ---
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **License:** Apache-2.0 (code) / CC-BY-4.0 (documentation)
 **Author:** nate-double-u
 **Repository:** https://github.com/nate-double-u/Our-Morning-Coffee

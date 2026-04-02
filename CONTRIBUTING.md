@@ -47,6 +47,9 @@ Feature suggestions are welcome! Please open an issue with:
 
 5. **Test the extension**:
    ```bash
+   # Run unit tests
+   npm test
+
    # Run in a clean Firefox profile (auto-reloads on file changes)
    npx web-ext run
 
