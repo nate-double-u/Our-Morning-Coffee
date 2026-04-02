@@ -7,12 +7,12 @@ An open-source Firefox extension that opens your favorite websites with a single
 - **Daily Website Lists**: Create lists for Every Day, Weekdays, Weekends, and each day of the week (Sunday - Saturday)
 - **Every Day List**: Sites that open every day, regardless of the day of the week
 - **One-Click Access**: Open all of today's sites with a single click
-- **Bookmark Toolbar Friendly**: Open a bookmarkable tab view with the extension icon favicon
+- **Bookmark Toolbar Friendly**: Open in a bookmarkable tab for quick toolbar access
 - **Keyboard Shortcut**: Press `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac) to open today's sites
 - **Easy Management**: Add sites directly from the popup or manage them in the settings page
 - **Import/Export**: Backup and restore your site lists as JSON files
 - **Privacy-Focused**: All data is stored locally in your browser
-- **Open Source**: Fully transparent and trustable code
+- **Open Source**: Fully transparent, auditable code
 
 ## Installation
 
@@ -37,14 +37,14 @@ Install directly from the [Mozilla Add-ons page](https://addons.mozilla.org/en-C
 
 The extension will now be loaded temporarily (until you restart Firefox).
 
-### Permanent Installation
+### Building and Signing
 
-For permanent installation, the extension needs to be signed by Mozilla:
+If you want to self-host or distribute a signed build:
 
 1. Package the extension:
    ```bash
    cd Our-Morning-Coffee
-   zip -r our-morning-coffee.zip * -x "*.git*"
+   npx web-ext build
    ```
 
 2. Submit to [Mozilla Add-ons](https://addons.mozilla.org/developers/) for review and signing
@@ -90,7 +90,7 @@ For permanent installation, the extension needs to be signed by Mozilla:
 
 Our Morning Coffee stores your website lists locally using Firefox's storage API. It supports an "Every Day" list, grouped "Weekdays"/"Weekends" lists, and each day of the week.
 
-When you click "Open Our Morning Coffee" or use the keyboard shortcut:
+When you click "Open Today's Sites" or use the keyboard shortcut:
 1. The extension checks what day it is
 2. It combines the "Every Day" list, today's group list (Weekdays/Weekends), and today's specific day list
 3. All URLs are opened in new tabs (in the background)
@@ -111,7 +111,7 @@ The extension is built with vanilla JavaScript using Firefox's WebExtension APIs
 - `browser.commands` - For keyboard shortcuts
 - `browser.notifications` - For user feedback
 
-No build tools are required - the code runs directly in the browser.
+No bundlers or transpilers are needed — the code runs directly in the browser. The `web-ext` CLI is only used for packaging and signing.
 
 ### Testing
 
@@ -167,7 +167,7 @@ This extension is inspired by the original [Morning Coffee](https://en.wikipedia
 
 ## Icons
 
-Extension icons based on the [Hot Tea Icon](https://uxwing.com/hot-tea-icon/) from UXWing, resized using [MyImageTools](https://myimagetools.com) online conversion tool. UXWing icons are free for personal and commercial use without attribution, but we're happy to credit them for their excellent work.
+Extension icons based on the [Hot Tea Icon](https://uxwing.com/hot-tea-icon/) from UXWing, resized using [MyImageTools](https://myimagetools.com). See [`icons/README.md`](icons/README.md) for license details.
 
 ## FAQ
 

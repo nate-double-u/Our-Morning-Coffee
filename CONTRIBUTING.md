@@ -1,6 +1,6 @@
 # Contributing to Our Morning Coffee
 
-Thank you for your interest in contributing to Our Morning Coffee! This document provides guidelines for contributing to the project.
+Thanks for considering a contribution! Here's how to get involved.
 
 ## Code of Conduct
 
@@ -76,17 +76,6 @@ Feature suggestions are welcome! Please open an issue with:
 - Keep functions small and focused
 - Use modern JavaScript (ES6+) features
 
-### File Organization
-
-```
-Our-Morning-Coffee/
-├── manifest.json       # Extension configuration
-├── background.js       # Background script
-├── icons/             # Extension icons
-├── popup/             # Popup UI files
-└── options/           # Options page files
-```
-
 ### Testing
 
 Before submitting a PR:
@@ -99,7 +88,7 @@ Before submitting a PR:
    - Export/import
    - All day tabs
 3. Check browser console for errors
-4. Verify no warnings from `web-ext lint`
+4. Verify no warnings from `npx web-ext lint`
 
 ### Extension APIs Used
 
@@ -114,7 +103,7 @@ Before submitting a PR:
 If you have questions, feel free to:
 - Open an issue for discussion
 - Check existing issues and documentation
-- Review the source code (it's well commented!)
+- Browse the source code
 
 ## License
 
