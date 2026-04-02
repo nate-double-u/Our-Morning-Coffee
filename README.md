@@ -178,7 +178,7 @@ If you missed the prompt to pin the icon during installation:
 You can also access your sites without the toolbar icon using:
 
 - **Keyboard shortcut**: `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac)
-- **Bookmark shortcut**: Click the extension icon → "Open in Tab" → bookmark that tab
+- **Bookmark shortcut**: Once the icon is pinned, click it → "Open in Tab" → bookmark that tab for future one-click access
 
 ## Support
 
