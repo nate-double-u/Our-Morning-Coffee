@@ -131,3 +131,29 @@ test('onInstalled normalizes malformed stored data', async () => {
   assert.deepEqual(browserMock.calls.set[0].siteLists.monday, []);
   assert.deepEqual(browserMock.calls.set[0].siteLists.everyday, ['https://a.com']);
 });
+
+test('onCommand listener calls openTodaysSites for open-morning-coffee command', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: {
+        everyday: ['https://a.com']
+      }
+    }
+  });
+  loadBackgroundWithBrowser(browserMock);
+
+  await browserMock._commandListener('open-morning-coffee');
+
+  assert.equal(browserMock.calls.tabsCreate.length, 1);
+  assert.deepEqual(browserMock.calls.tabsCreate[0], { url: 'https://a.com', active: false });
+});
+
+test('onCommand listener ignores unknown commands', async () => {
+  const browserMock = makeBrowserMock({ getResult: { siteLists: {} } });
+  loadBackgroundWithBrowser(browserMock);
+
+  await browserMock._commandListener('some-other-command');
+
+  assert.deepEqual(browserMock.calls.tabsCreate, []);
+  assert.deepEqual(browserMock.calls.notifications, []);
+});

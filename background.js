@@ -21,9 +21,9 @@ browser.runtime.onInstalled.addListener(async () => {
 });
 
 // Listen for keyboard shortcut
-browser.commands.onCommand.addListener((command) => {
+browser.commands.onCommand.addListener(async (command) => {
   if (command === 'open-morning-coffee') {
-    openTodaysSites();
+    await openTodaysSites();
   }
 });
 
