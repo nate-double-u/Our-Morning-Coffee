@@ -153,7 +153,8 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+Documentation and non-code content are licensed under [CC-BY-4.0](LICENSE-CC-BY-4.0).
+Code is licensed under [Apache-2.0](LICENSE-APACHE-2.0).
 
 ## Inspiration
 
