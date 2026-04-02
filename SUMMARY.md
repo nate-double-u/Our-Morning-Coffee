@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Firefox extension that modernizes the classic "Morning Coffee" concept: organize your daily websites by day of the week and open them all with one click.
+A Firefox extension that modernizes the classic "Morning Coffee" concept: organize your daily websites by day of the week and open them all at once.
 
 ## Key Features
 
@@ -10,7 +10,7 @@ A Firefox extension that modernizes the classic "Morning Coffee" concept: organi
 1. **Daily Website Organization**
    - 8 separate lists: Every Day + 7 days of the week
    - Quick add from current tab
-   - One-click opening of all sites
+   - Quick opening of all sites
    - Keyboard shortcut (Ctrl+Shift+U on Windows/Linux, Cmd+Shift+U on Mac)
 
 2. **User Interface**
