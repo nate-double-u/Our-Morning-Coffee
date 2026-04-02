@@ -175,10 +175,11 @@ If you missed the prompt to pin the icon during installation:
 2. Find **Our Morning Coffee** in the list
 3. Click the three-dot menu (⋯) and select **Pin to Toolbar**
 
-You can also access your sites without the toolbar icon using:
+You can also open your sites without the toolbar icon using the keyboard shortcut:
 
-- **Keyboard shortcut**: `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac)
-- **Bookmark shortcut**: Once the icon is pinned, click it → "Open in Tab" → bookmark that tab for future one-click access
+- `Ctrl+Shift+O` (Windows/Linux) or `Cmd+Shift+M` (Mac)
+
+Once you've re-pinned the icon, you can set up a one-click bookmark shortcut too — see [Using a Bookmark Toolbar Shortcut](#using-a-bookmark-toolbar-shortcut) above.
 
 ## Support
 
