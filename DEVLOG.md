@@ -8,7 +8,7 @@ A Firefox extension that modernizes the classic "Morning Coffee" concept: organi
 
 ### User Features
 1. **Daily Website Organization**
-   - 8 separate lists: Every Day + 7 days of the week
+   - 10 separate lists: Every Day, Weekdays, Weekends, plus Sunday–Saturday
    - Quick add from current tab
    - Quick opening of all sites
    - Keyboard shortcut (Ctrl+Shift+U on Windows/Linux, Cmd+Shift+U on Mac)
