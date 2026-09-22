@@ -27,6 +27,15 @@ browser.commands.onCommand.addListener(async (command) => {
   }
 });
 
+function notify(message) {
+  browser.notifications.create({
+    type: 'basic',
+    iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
+    title: 'Our Morning Coffee',
+    message
+  });
+}
+
 // Function to open today's sites
 async function openTodaysSites(dayIndex = new Date().getDay()) {
   const result = await browser.storage.local.get('siteLists');
@@ -34,13 +43,7 @@ async function openTodaysSites(dayIndex = new Date().getDay()) {
   const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {
-    // Show a notification if no sites are configured
-    browser.notifications.create({
-      type: 'basic',
-      iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
-      title: 'Our Morning Coffee',
-      message: 'No sites configured for today. Add some in the options page!'
-    });
+    notify('No sites configured for today. Add some in the options page!');
     return;
   }
   
@@ -49,13 +52,7 @@ async function openTodaysSites(dayIndex = new Date().getDay()) {
     await browser.tabs.create({ url: url, active: false });
   }
   
-  // Show success notification
-  browser.notifications.create({
-    type: 'basic',
-    iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
-    title: 'Our Morning Coffee',
-    message: `Opened ${sitesToOpen.length} site(s) for ${todayName}`
-  });
+  notify(`Opened ${sitesToOpen.length} site(s) for ${todayName}`);
 }
 
 // Export function for use in popup
