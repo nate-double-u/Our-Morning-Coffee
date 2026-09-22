@@ -42,7 +42,9 @@ Feature suggestions are welcome! Please open an issue with:
 4. **Make your changes**:
    - Follow the existing code style
    - Keep changes focused and minimal
-   - Test your changes thoroughly
+   - Add or update unit tests in `test/`
+   - Tests tagged `// LOCKED:` are frozen; do not change them without
+     maintainer approval (see `.github/copilot-instructions.md`)
 
 5. **Test the extension**:
    ```bash
@@ -73,6 +75,9 @@ Feature suggestions are welcome! Please open an issue with:
 8. **Open a Pull Request** on GitHub
 
 ## Development Guidelines
+
+Using an AI coding agent? It should read `.github/copilot-instructions.md`
+first.
 
 ### Code Style
 
