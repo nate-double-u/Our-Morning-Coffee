@@ -67,10 +67,26 @@ are not locked unless the maintainer asks.
 
 - `shared/site-lists.js`: pure list logic, UMD (CommonJS for tests, global
   `OurMorningCoffeeSiteLists` in the browser). Put testable logic here.
-- `background/background.js`: keyboard command and `openTodaysSites`.
-- `popup/`, `options/`: UI; both load `shared/site-lists.js`.
+- `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()`; the only place
+  that reads or writes `browser.storage.local`. Always normalizes.
+- `background/background.js`: keyboard command, popup messages, and
+  `openTodaysSites`. The popup opens sites by messaging the background, not
+  by calling `tabs.create` itself.
+- `popup/`, `options/`: UI; both load `shared/site-lists.js` and
+  `shared/storage.js`.
 - `test/`: Node built-in test runner. `background.test.js` mocks the
   `browser` global.
+
+## Compatibility
+
+The extension has users on AMO. Stored data (`browser.storage.local` keys
+and their shape) and the export JSON format are a public contract.
+
+- Prefer additive changes: new keys with defaults applied on read.
+- If a shape must change, add a migration in the `onInstalled` handler (it
+  runs on update too) and a test that loads data written by the previous
+  release.
+- Import must keep accepting export files from every earlier release.
 
 ## Style
 

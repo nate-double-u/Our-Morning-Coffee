@@ -43,6 +43,7 @@ test('loadSiteLists returns empty normalized lists when nothing is stored', asyn
   assert.ok(validListKeys.every(key => siteLists[key].length === 0));
 });
 
+// LOCKED: regression for storage contract (siteLists key, normalized shape)
 test('saveSiteLists writes normalized lists under the siteLists key', async () => {
   const calls = installStorageMock({});
 

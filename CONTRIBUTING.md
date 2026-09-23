@@ -45,6 +45,8 @@ Feature suggestions are welcome! Please open an issue with:
    - Add or update unit tests in `test/`
    - Tests tagged `// LOCKED:` are frozen; do not change them without
      maintainer approval (see `.github/copilot-instructions.md`)
+   - Keep stored data and the export format backwards compatible; if a shape
+     must change, add a migration in `onInstalled` and a test for old data
 
 5. **Test the extension**:
    ```bash
