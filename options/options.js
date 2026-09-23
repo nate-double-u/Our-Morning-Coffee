@@ -1,7 +1,8 @@
 // Options page script for Our Morning Coffee
 
 let currentDay = 'everyday';
-const { listLabelByKey: dayNames, validListKeys: validDays, normalizeSiteLists, addSiteToList } = OurMorningCoffeeSiteLists;
+const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList } = OurMorningCoffeeSiteLists;
+const { loadSiteLists, saveSiteLists } = OurMorningCoffeeStorage;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -56,8 +57,7 @@ async function switchTab(day) {
 }
 
 async function loadSites() {
-  const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
+  const siteLists = await loadSiteLists();
   const sites = siteLists[currentDay] || [];
   
   const container = document.getElementById('sites-container');
@@ -122,15 +122,14 @@ async function addSite() {
     return;
   }
   
-  const result = await browser.storage.local.get('siteLists');
-  const { siteLists, added } = addSiteToList(result.siteLists, currentDay, url);
+  const { siteLists, added } = addSiteToList(await loadSiteLists(), currentDay, url);
   
   if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  await browser.storage.local.set({ siteLists });
+  await saveSiteLists(siteLists);
   
   // Clear input and reload
   input.value = '';
@@ -142,25 +141,21 @@ async function deleteSite(index) {
     return;
   }
   
-  // Get current site lists
-  const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
+  const siteLists = await loadSiteLists();
   
   // Remove the site
   if (siteLists[currentDay]) {
     siteLists[currentDay].splice(index, 1);
   }
   
-  // Save back to storage
-  await browser.storage.local.set({ siteLists });
+  await saveSiteLists(siteLists);
   
   // Reload sites
   await loadSites();
 }
 
 async function exportData() {
-  const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
+  const siteLists = await loadSiteLists();
   
   const dataStr = JSON.stringify(siteLists, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
@@ -197,7 +192,7 @@ async function importData(event) {
     }
     
     // Save the imported data
-    await browser.storage.local.set({ siteLists: normalizeSiteLists(importedData) });
+    await saveSiteLists(importedData);
     
     // Reload the current view
     await loadSites();

@@ -3,12 +3,12 @@
 const isTabMode = new URLSearchParams(window.location.search).get('mode') === 'tab';
 const {
   listLabelByKey,
-  normalizeSiteLists,
   getCategoryKeyForDay,
   getDayKey,
   getSitesToOpen,
   addSiteToList
 } = OurMorningCoffeeSiteLists;
+const { loadSiteLists, saveSiteLists } = OurMorningCoffeeStorage;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -25,8 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function updatePopupInfo() {
-  const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
+  const siteLists = await loadSiteLists();
   
   // Get current day
   const today = new Date().getDay();
@@ -94,15 +93,14 @@ async function addCurrentTab() {
   // Get selected day
   const selectedDay = document.getElementById('day-selector').value;
   
-  const result = await browser.storage.local.get('siteLists');
-  const { siteLists, added } = addSiteToList(result.siteLists, selectedDay, currentTab.url);
+  const { siteLists, added } = addSiteToList(await loadSiteLists(), selectedDay, currentTab.url);
   
   if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  await browser.storage.local.set({ siteLists });
+  await saveSiteLists(siteLists);
   
   // Update the popup info
   await updatePopupInfo();

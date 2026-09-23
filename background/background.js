@@ -3,20 +3,24 @@
 const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
   ? OurMorningCoffeeSiteLists
   : require('../shared/site-lists');
+const storageModule = typeof OurMorningCoffeeStorage !== 'undefined'
+  ? OurMorningCoffeeStorage
+  : require('../shared/storage');
 const { dayKeys, normalizeSiteLists, getSitesToOpen } = siteListsModule;
+const { loadSiteLists, saveSiteLists } = storageModule;
 
 // Initialize storage with default empty lists if not present
 browser.runtime.onInstalled.addListener(async () => {
   const result = await browser.storage.local.get('siteLists');
 
   if (!result.siteLists) {
-    await browser.storage.local.set({ siteLists: normalizeSiteLists() });
+    await saveSiteLists();
     return;
   }
 
   const normalized = normalizeSiteLists(result.siteLists);
   if (JSON.stringify(normalized) !== JSON.stringify(result.siteLists)) {
-    await browser.storage.local.set({ siteLists: normalized });
+    await saveSiteLists(normalized);
   }
 });
 
@@ -45,8 +49,8 @@ function notify(message) {
 
 // Open today's sites in background tabs. Returns the number of sites opened.
 async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldNotify = true } = {}) {
-  const result = await browser.storage.local.get('siteLists');
-  const sitesToOpen = getSitesToOpen(result.siteLists || {}, dayIndex);
+  const siteLists = await loadSiteLists();
+  const sitesToOpen = getSitesToOpen(siteLists, dayIndex);
   const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {
