@@ -1,7 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validListKeys } = require('../shared/site-lists');
-const { loadSiteLists, saveSiteLists, normalizeStoredSiteLists } = require('../shared/storage');
+const { loadSiteLists, saveSiteLists, normalizeStoredSiteLists, loadSettings, saveSettings } = require('../shared/storage');
+const { defaultSettings } = require('../shared/settings');
 
 function installStorageMock(stored) {
   const calls = { set: [] };
@@ -82,4 +83,36 @@ test('normalizeStoredSiteLists does not write when stored lists are already norm
   await normalizeStoredSiteLists();
 
   assert.equal(calls.set.length, 0);
+});
+
+test('loadSettings returns defaults when nothing is stored', async () => {
+  installStorageMock({});
+
+  assert.deepEqual(await loadSettings(), defaultSettings);
+});
+
+test('loadSettings normalizes stored settings', async () => {
+  installStorageMock({ settings: { openOrder: 'random', fillEmptyTab: 'nope', junk: 1 } });
+
+  assert.deepEqual(await loadSettings(), { fillEmptyTab: true, openOrder: 'random' });
+});
+
+// LOCKED: regression for storage contract (settings key, normalized shape)
+test('saveSettings writes normalized settings under the settings key', async () => {
+  const calls = installStorageMock({});
+
+  await saveSettings({ openOrder: 'random', junk: 1 });
+
+  assert.equal(calls.set.length, 1);
+  assert.deepEqual(Object.keys(calls.set[0]), ['settings']);
+  assert.deepEqual(calls.set[0].settings, { fillEmptyTab: true, openOrder: 'random' });
+});
+
+test('saveSettings does not touch siteLists', async () => {
+  const calls = installStorageMock({ siteLists: { everyday: ['https://a.com'] } });
+
+  await saveSettings({ openOrder: 'random' });
+
+  assert.equal(calls.set.length, 1);
+  assert.equal('siteLists' in calls.set[0], false);
 });
