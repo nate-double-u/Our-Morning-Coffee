@@ -20,8 +20,18 @@
     await root.browser.storage.local.set({ siteLists: normalizeSiteLists(siteLists) });
   }
 
+  // Runs on install and update. Writes only if stored data is missing or malformed.
+  async function normalizeStoredSiteLists() {
+    const result = await root.browser.storage.local.get('siteLists');
+    const normalized = normalizeSiteLists(result.siteLists);
+    if (JSON.stringify(normalized) !== JSON.stringify(result.siteLists)) {
+      await saveSiteLists(normalized);
+    }
+  }
+
   return {
     loadSiteLists,
-    saveSiteLists
+    saveSiteLists,
+    normalizeStoredSiteLists
   };
 }));

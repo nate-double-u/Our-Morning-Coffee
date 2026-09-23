@@ -6,22 +6,12 @@ const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
 const storageModule = typeof OurMorningCoffeeStorage !== 'undefined'
   ? OurMorningCoffeeStorage
   : require('../shared/storage');
-const { dayKeys, normalizeSiteLists, getSitesToOpen } = siteListsModule;
-const { loadSiteLists, saveSiteLists } = storageModule;
+const { dayKeys, getSitesToOpen } = siteListsModule;
+const { loadSiteLists, normalizeStoredSiteLists } = storageModule;
 
-// Initialize storage with default empty lists if not present
+// Keep stored data normalized across installs and updates
 browser.runtime.onInstalled.addListener(async () => {
-  const result = await browser.storage.local.get('siteLists');
-
-  if (!result.siteLists) {
-    await saveSiteLists();
-    return;
-  }
-
-  const normalized = normalizeSiteLists(result.siteLists);
-  if (JSON.stringify(normalized) !== JSON.stringify(result.siteLists)) {
-    await saveSiteLists(normalized);
-  }
+  await normalizeStoredSiteLists();
 });
 
 // Listen for keyboard shortcut

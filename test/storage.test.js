@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validListKeys } = require('../shared/site-lists');
-const { loadSiteLists, saveSiteLists } = require('../shared/storage');
+const { loadSiteLists, saveSiteLists, normalizeStoredSiteLists } = require('../shared/storage');
 
 function installStorageMock(stored) {
   const calls = { set: [] };
@@ -53,4 +53,33 @@ test('saveSiteLists writes normalized lists under the siteLists key', async () =
   assert.deepEqual(Object.keys(calls.set[0]), ['siteLists']);
   assert.deepEqual(calls.set[0].siteLists.everyday, ['https://a.com']);
   assert.equal(calls.set[0].siteLists.junk, undefined);
+});
+
+test('normalizeStoredSiteLists writes default lists when nothing is stored', async () => {
+  const calls = installStorageMock({});
+
+  await normalizeStoredSiteLists();
+
+  assert.equal(calls.set.length, 1);
+  assert.deepEqual(Object.keys(calls.set[0].siteLists), validListKeys);
+  assert.ok(validListKeys.every(key => calls.set[0].siteLists[key].length === 0));
+});
+
+test('normalizeStoredSiteLists rewrites malformed stored lists', async () => {
+  const calls = installStorageMock({ siteLists: { everyday: ['https://a.com'], monday: 'bad' } });
+
+  await normalizeStoredSiteLists();
+
+  assert.equal(calls.set.length, 1);
+  assert.deepEqual(calls.set[0].siteLists.everyday, ['https://a.com']);
+  assert.deepEqual(calls.set[0].siteLists.monday, []);
+});
+
+test('normalizeStoredSiteLists does not write when stored lists are already normalized', async () => {
+  const { normalizeSiteLists } = require('../shared/site-lists');
+  const calls = installStorageMock({ siteLists: normalizeSiteLists({ everyday: ['https://a.com'] }) });
+
+  await normalizeStoredSiteLists();
+
+  assert.equal(calls.set.length, 0);
 });

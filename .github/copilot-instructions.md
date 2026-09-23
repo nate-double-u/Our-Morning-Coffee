@@ -83,9 +83,9 @@ The extension has users on AMO. Stored data (`browser.storage.local` keys
 and their shape) and the export JSON format are a public contract.
 
 - Prefer additive changes: new keys with defaults applied on read.
-- If a shape must change, add a migration in the `onInstalled` handler (it
-  runs on update too) and a test that loads data written by the previous
-  release.
+- If a shape must change, add a migration in `shared/storage.js`, call it
+  from the `onInstalled` handler (it runs on update too), and add a test that
+  loads data written by the previous release.
 - Import must keep accepting export files from every earlier release.
 
 ## Style
