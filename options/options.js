@@ -2,7 +2,7 @@
 
 let currentDay = 'everyday';
 const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList } = OurMorningCoffeeSiteLists;
-const { loadSiteLists, saveSiteLists } = OurMorningCoffeeStorage;
+const { loadSiteLists, saveSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -34,9 +34,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   const manifest = browser.runtime.getManifest();
   document.getElementById('version-info').textContent = `v${manifest.version}`;
 
+  // Settings controls save on change
+  document.getElementById('fill-empty-tab').addEventListener('change', saveSettingsFromForm);
+  document.getElementById('open-order').addEventListener('change', saveSettingsFromForm);
+
   // Load initial data
   await loadSites();
+  await loadSettingsIntoForm();
 });
+
+async function loadSettingsIntoForm() {
+  const settings = await loadSettings();
+  document.getElementById('fill-empty-tab').checked = settings.fillEmptyTab;
+  document.getElementById('open-order').value = settings.openOrder;
+}
+
+async function saveSettingsFromForm() {
+  await saveSettings({
+    fillEmptyTab: document.getElementById('fill-empty-tab').checked,
+    openOrder: document.getElementById('open-order').value
+  });
+}
 
 async function switchTab(day) {
   currentDay = day;
