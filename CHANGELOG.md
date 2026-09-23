@@ -5,6 +5,11 @@ All notable changes to the Our Morning Coffee extension will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Agent instructions (`.github/copilot-instructions.md`) and a locked-test convention; all v1.1.0 tests are locked as the baseline
+
 ## [1.1.0] - 2026-04-02
 
 ### Added
@@ -60,5 +65,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No data collection or tracking
 - All data stored locally in browser storage
 
+[Unreleased]: https://github.com/nate-double-u/Our-Morning-Coffee/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/nate-double-u/Our-Morning-Coffee/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nate-double-u/Our-Morning-Coffee/releases/tag/v1.0.0

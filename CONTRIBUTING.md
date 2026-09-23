@@ -42,7 +42,9 @@ Feature suggestions are welcome! Please open an issue with:
 4. **Make your changes**:
    - Follow the existing code style
    - Keep changes focused and minimal
-   - Test your changes thoroughly
+   - Add or update unit tests in `test/`
+   - Tests tagged `// LOCKED:` are frozen; do not change them without
+     maintainer approval (see `.github/copilot-instructions.md`)
 
 5. **Test the extension**:
    ```bash
@@ -59,10 +61,11 @@ Feature suggestions are welcome! Please open an issue with:
    npx web-ext build
    ```
 
-6. **Commit your changes**:
+6. **Commit your changes**. Keep messages short: a `type: description`
+   subject line, and a body only if it adds something the diff doesn't say.
    ```bash
    git add .
-   git commit -m "Add feature: description of your changes"
+   git commit -m "feat: add site reordering"
    ```
 
 7. **Push to your fork**:
@@ -73,6 +76,9 @@ Feature suggestions are welcome! Please open an issue with:
 8. **Open a Pull Request** on GitHub
 
 ## Development Guidelines
+
+Using an AI coding agent? It should read `.github/copilot-instructions.md`
+first.
 
 ### Code Style
 

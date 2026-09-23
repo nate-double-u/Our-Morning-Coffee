@@ -63,6 +63,7 @@ test.afterEach(() => {
   delete require.cache[require.resolve('../background/background')];
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('openTodaysSites opens combined deduplicated weekday sites and sends success notification', async () => {
   const browserMock = makeBrowserMock({
     getResult: {
@@ -87,6 +88,7 @@ test('openTodaysSites opens combined deduplicated weekday sites and sends succes
   assert.match(browserMock.calls.notifications[0].message, /Opened 4 site\(s\) for monday/);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('openTodaysSites shows empty-state notification when there are no sites for the day', async () => {
   const browserMock = makeBrowserMock({ getResult: { siteLists: {} } });
   const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
@@ -101,6 +103,7 @@ test('openTodaysSites shows empty-state notification when there are no sites for
   );
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('onInstalled initializes storage when siteLists is missing', async () => {
   const browserMock = makeBrowserMock({ getResult: {} });
   loadBackgroundWithBrowser(browserMock);
@@ -114,6 +117,7 @@ test('onInstalled initializes storage when siteLists is missing', async () => {
   );
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('onInstalled normalizes malformed stored data', async () => {
   const browserMock = makeBrowserMock({
     getResult: {
@@ -132,6 +136,7 @@ test('onInstalled normalizes malformed stored data', async () => {
   assert.deepEqual(browserMock.calls.set[0].siteLists.everyday, ['https://a.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('onCommand listener calls openTodaysSites for open-morning-coffee command', async () => {
   const browserMock = makeBrowserMock({
     getResult: {
@@ -148,6 +153,7 @@ test('onCommand listener calls openTodaysSites for open-morning-coffee command',
   assert.deepEqual(browserMock.calls.tabsCreate[0], { url: 'https://a.com', active: false });
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('onCommand listener ignores unknown commands', async () => {
   const browserMock = makeBrowserMock({ getResult: { siteLists: {} } });
   loadBackgroundWithBrowser(browserMock);

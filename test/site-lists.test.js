@@ -8,6 +8,7 @@ const {
   getSitesToOpen
 } = require('../shared/site-lists');
 
+// LOCKED: regression for v1.1.0 baseline
 test('normalizeSiteLists keeps known lists and drops invalid values', () => {
   const normalized = normalizeSiteLists({
     everyday: ['https://example.com'],
@@ -21,6 +22,7 @@ test('normalizeSiteLists keeps known lists and drops invalid values', () => {
   assert.equal(normalized.unknown, undefined);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('normalizeSiteLists filters out non-string values', () => {
   const normalized = normalizeSiteLists({
     everyday: [123, null, 'https://valid.com', undefined, true]
@@ -28,6 +30,7 @@ test('normalizeSiteLists filters out non-string values', () => {
   assert.deepEqual(normalized.everyday, ['https://valid.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('normalizeSiteLists trims and filters empty strings', () => {
   const normalized = normalizeSiteLists({
     everyday: ['', 'https://valid.com', '   ', '  https://trimmed.com  ']
@@ -35,12 +38,14 @@ test('normalizeSiteLists trims and filters empty strings', () => {
   assert.deepEqual(normalized.everyday, ['https://valid.com', 'https://trimmed.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('normalizeSiteLists handles null input', () => {
   const normalized = normalizeSiteLists(null);
   assert.deepEqual(Object.keys(normalized), validListKeys);
   assert.deepEqual(normalized.everyday, []);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getCategoryKeyForDay maps weekends and weekdays correctly', () => {
   assert.equal(getCategoryKeyForDay(0), 'weekends');
   assert.equal(getCategoryKeyForDay(6), 'weekends');
@@ -48,6 +53,7 @@ test('getCategoryKeyForDay maps weekends and weekdays correctly', () => {
   assert.equal(getCategoryKeyForDay(5), 'weekdays');
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getDayKey returns correct day name for each index', () => {
   assert.equal(getDayKey(0), 'sunday');
   assert.equal(getDayKey(1), 'monday');
@@ -58,12 +64,14 @@ test('getDayKey returns correct day name for each index', () => {
   assert.equal(getDayKey(6), 'saturday');
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getDayKey returns undefined for out-of-range index', () => {
   assert.equal(getDayKey(7), undefined);
   assert.equal(getDayKey(-1), undefined);
   assert.equal(getDayKey(100), undefined);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getSitesToOpen still includes weekday category for out-of-range dayIndex', () => {
   const sites = getSitesToOpen(
     { everyday: ['https://a.com'], weekdays: ['https://b.com'], monday: ['https://c.com'] },
@@ -74,11 +82,13 @@ test('getSitesToOpen still includes weekday category for out-of-range dayIndex',
   assert.deepEqual(sites, ['https://a.com', 'https://b.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getSitesToOpen handles null siteLists', () => {
   assert.deepEqual(getSitesToOpen(null, 1), []);
   assert.deepEqual(getSitesToOpen(undefined, 1), []);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getSitesToOpen filters out non-string values from lists', () => {
   const sites = getSitesToOpen(
     { everyday: [123, null, 'https://valid.com'] },
@@ -87,6 +97,7 @@ test('getSitesToOpen filters out non-string values from lists', () => {
   assert.deepEqual(sites, ['https://valid.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getSitesToOpen deduplicates within a single list', () => {
   const sites = getSitesToOpen(
     { everyday: ['https://a.com', 'https://a.com', 'https://b.com'] },
@@ -95,6 +106,7 @@ test('getSitesToOpen deduplicates within a single list', () => {
   assert.deepEqual(sites, ['https://a.com', 'https://b.com']);
 });
 
+// LOCKED: regression for v1.1.0 baseline
 test('getSitesToOpen merges and de-duplicates everyday, category, and day lists', () => {
   const sites = getSitesToOpen(
     {
