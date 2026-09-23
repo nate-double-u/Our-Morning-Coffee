@@ -43,6 +43,24 @@
         </div>
       </div>
       
+      <div class="settings-section">
+        <h2>Settings</h2>
+        <div class="setting">
+          <label for="fill-empty-tab">
+            <input type="checkbox" id="fill-empty-tab">
+            Use the current tab if it is empty
+          </label>
+          <p class="setting-help">When the active tab is a new or blank tab, load the first site into it instead of leaving it open.</p>
+        </div>
+        <div class="setting">
+          <label for="open-order">Open order</label>
+          <select id="open-order">
+            <option value="list">As arranged in your lists</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+      </div>
+      
       <div class="actions">
         <button id="export-btn" class="secondary-button">Export Data</button>
         <button id="import-btn" class="secondary-button">Import Data</button>
@@ -63,6 +81,7 @@
   </div>
   
   <script src="../shared/site-lists.js"></script>
+  <script src="../shared/settings.js"></script>
   <script src="../shared/storage.js"></script>
   <script src="options.js"></script>
 </body>

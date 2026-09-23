@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Agent instructions (`.github/copilot-instructions.md`) and a locked-test convention; all v1.1.0 tests are locked as the baseline
+- Settings section on the options page: fill the current empty tab (default on) and open order (list or random). Stored under a new `settings` key; the controls take effect in a later release
 
 ### Changed
 - Popup opens sites through the background script instead of its own copy of the logic

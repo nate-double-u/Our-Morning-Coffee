@@ -2,7 +2,7 @@
 
 let currentDay = 'everyday';
 const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList } = OurMorningCoffeeSiteLists;
-const { loadSiteLists, saveSiteLists } = OurMorningCoffeeStorage;
+const { loadSiteLists, saveSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -36,7 +36,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Load initial data
   await loadSites();
+  await loadSettingsIntoForm();
+
+  // Save on change, only once the form reflects stored values
+  document.getElementById('fill-empty-tab').addEventListener('change', saveSettingsFromForm);
+  document.getElementById('open-order').addEventListener('change', saveSettingsFromForm);
 });
+
+async function loadSettingsIntoForm() {
+  const settings = await loadSettings();
+  document.getElementById('fill-empty-tab').checked = settings.fillEmptyTab;
+  document.getElementById('open-order').value = settings.openOrder;
+}
+
+async function saveSettingsFromForm() {
+  await saveSettings({
+    fillEmptyTab: document.getElementById('fill-empty-tab').checked,
+    openOrder: document.getElementById('open-order').value
+  });
+}
 
 async function switchTab(day) {
   currentDay = day;

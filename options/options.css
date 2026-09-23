@@ -190,6 +190,59 @@ main {
   border-top: 2px solid #e0e0e0;
 }
 
+.settings-section {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.settings-section h2 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  color: #6F4E37;
+}
+
+.setting {
+  margin-bottom: 16px;
+}
+
+.setting label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+.setting input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #6F4E37;
+}
+
+.setting select {
+  display: block;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  max-width: 100%;
+}
+
+.setting select:focus {
+  outline: none;
+  border-color: #6F4E37;
+}
+
+.setting-help {
+  margin: 4px 0 0 24px;
+  font-size: 13px;
+  color: #666;
+}
+
 .secondary-button {
   padding: 12px 24px;
   background: #e0e0e0;
