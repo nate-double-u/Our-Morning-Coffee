@@ -173,3 +173,21 @@ test('addSiteToList rejects an unknown list key', () => {
   assert.equal(added, false);
   assert.equal(siteLists.someday, undefined);
 });
+
+test('addSiteToList trims the url and treats a padded duplicate as already present', () => {
+  const padded = addSiteToList({ monday: ['https://a.com'] }, 'monday', '  https://a.com  ');
+  assert.equal(padded.added, false);
+  assert.deepEqual(padded.siteLists.monday, ['https://a.com']);
+
+  const fresh = addSiteToList({}, 'monday', '  https://b.com ');
+  assert.equal(fresh.added, true);
+  assert.deepEqual(fresh.siteLists.monday, ['https://b.com']);
+});
+
+test('addSiteToList rejects empty and non-string urls', () => {
+  for (const bad of ['', '   ', null, undefined, 42]) {
+    const { siteLists, added } = addSiteToList({}, 'monday', bad);
+    assert.equal(added, false, `expected ${JSON.stringify(bad)} to be rejected`);
+    assert.deepEqual(siteLists.monday, []);
+  }
+});

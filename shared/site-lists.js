@@ -61,10 +61,11 @@
   // Returns { siteLists, added }. Lists are normalized; the input is not mutated.
   function addSiteToList(siteLists, listKey, url) {
     const normalized = normalizeSiteLists(siteLists);
-    if (!validListKeys.includes(listKey) || normalized[listKey].includes(url)) {
+    const trimmed = typeof url === 'string' ? url.trim() : '';
+    if (!validListKeys.includes(listKey) || trimmed.length === 0 || normalized[listKey].includes(trimmed)) {
       return { siteLists: normalized, added: false };
     }
-    normalized[listKey].push(url);
+    normalized[listKey].push(trimmed);
     return { siteLists: normalized, added: true };
   }
 
