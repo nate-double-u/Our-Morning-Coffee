@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const manifest = browser.runtime.getManifest();
   document.getElementById('version-info').textContent = `v${manifest.version}`;
 
-  // Settings controls save on change
-  document.getElementById('fill-empty-tab').addEventListener('change', saveSettingsFromForm);
-  document.getElementById('open-order').addEventListener('change', saveSettingsFromForm);
-
   // Load initial data
   await loadSites();
   await loadSettingsIntoForm();
+
+  // Save on change, only once the form reflects stored values
+  document.getElementById('fill-empty-tab').addEventListener('change', saveSettingsFromForm);
+  document.getElementById('open-order').addEventListener('change', saveSettingsFromForm);
 });
 
 async function loadSettingsIntoForm() {
