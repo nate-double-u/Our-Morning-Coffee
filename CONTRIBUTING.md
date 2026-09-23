@@ -61,10 +61,11 @@ Feature suggestions are welcome! Please open an issue with:
    npx web-ext build
    ```
 
-6. **Commit your changes**:
+6. **Commit your changes**. Keep messages short: a `type: description`
+   subject line, and a body only if it adds something the diff doesn't say.
    ```bash
    git add .
-   git commit -m "Add feature: description of your changes"
+   git commit -m "feat: add site reordering"
    ```
 
 7. **Push to your fork**:
