@@ -67,13 +67,16 @@ are not locked unless the maintainer asks.
 
 - `shared/site-lists.js`: pure list logic, UMD (CommonJS for tests, global
   `OurMorningCoffeeSiteLists` in the browser). Put testable logic here.
-- `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()`; the only place
-  that reads or writes `browser.storage.local`. Always normalizes.
+- `shared/settings.js`: `defaultSettings` and `normalizeSettings()`. Add a
+  new setting here with a default; storage applies defaults on read.
+- `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()` and
+  `loadSettings()` / `saveSettings()`; the only place that reads or writes
+  `browser.storage.local`. Always normalizes.
 - `background/background.js`: keyboard command, popup messages, and
   `openTodaysSites`. The popup opens sites by messaging the background, not
   by calling `tabs.create` itself.
-- `popup/`, `options/`: UI; both load `shared/site-lists.js` and
-  `shared/storage.js`.
+- `popup/`, `options/`: UI; both load `shared/site-lists.js`,
+  `shared/settings.js`, and `shared/storage.js`.
 - `test/`: Node built-in test runner. `background.test.js` mocks the
   `browser` global.
 
