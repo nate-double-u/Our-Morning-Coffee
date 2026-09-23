@@ -3,21 +3,15 @@
 const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
   ? OurMorningCoffeeSiteLists
   : require('../shared/site-lists');
-const { dayKeys, normalizeSiteLists, getSitesToOpen } = siteListsModule;
+const storageModule = typeof OurMorningCoffeeStorage !== 'undefined'
+  ? OurMorningCoffeeStorage
+  : require('../shared/storage');
+const { dayKeys, getSitesToOpen } = siteListsModule;
+const { loadSiteLists, normalizeStoredSiteLists } = storageModule;
 
-// Initialize storage with default empty lists if not present
+// Keep stored data normalized across installs and updates
 browser.runtime.onInstalled.addListener(async () => {
-  const result = await browser.storage.local.get('siteLists');
-
-  if (!result.siteLists) {
-    await browser.storage.local.set({ siteLists: normalizeSiteLists() });
-    return;
-  }
-
-  const normalized = normalizeSiteLists(result.siteLists);
-  if (JSON.stringify(normalized) !== JSON.stringify(result.siteLists)) {
-    await browser.storage.local.set({ siteLists: normalized });
-  }
+  await normalizeStoredSiteLists();
 });
 
 // Listen for keyboard shortcut
@@ -27,21 +21,33 @@ browser.commands.onCommand.addListener(async (command) => {
   }
 });
 
-// Function to open today's sites
-async function openTodaysSites(dayIndex = new Date().getDay()) {
-  const result = await browser.storage.local.get('siteLists');
-  const sitesToOpen = getSitesToOpen(result.siteLists || {}, dayIndex);
+// Listen for requests from the popup
+browser.runtime.onMessage.addListener((message) => {
+  if (message && message.type === 'open-todays-sites') {
+    return openTodaysSites(undefined, { notify: message.notify !== false });
+  }
+});
+
+function notify(message) {
+  browser.notifications.create({
+    type: 'basic',
+    iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
+    title: 'Our Morning Coffee',
+    message
+  });
+}
+
+// Open today's sites in background tabs. Returns the number of sites opened.
+async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldNotify = true } = {}) {
+  const siteLists = await loadSiteLists();
+  const sitesToOpen = getSitesToOpen(siteLists, dayIndex);
   const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {
-    // Show a notification if no sites are configured
-    browser.notifications.create({
-      type: 'basic',
-      iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
-      title: 'Our Morning Coffee',
-      message: 'No sites configured for today. Add some in the options page!'
-    });
-    return;
+    if (shouldNotify) {
+      notify('No sites configured for today. Add some in the options page!');
+    }
+    return 0;
   }
   
   // Open each site in a new tab
@@ -49,16 +55,12 @@ async function openTodaysSites(dayIndex = new Date().getDay()) {
     await browser.tabs.create({ url: url, active: false });
   }
   
-  // Show success notification
-  browser.notifications.create({
-    type: 'basic',
-    iconUrl: browser.runtime.getURL('icons/coffee-48.png'),
-    title: 'Our Morning Coffee',
-    message: `Opened ${sitesToOpen.length} site(s) for ${todayName}`
-  });
+  if (shouldNotify) {
+    notify(`Opened ${sitesToOpen.length} site(s) for ${todayName}`);
+  }
+  return sitesToOpen.length;
 }
 
-// Export function for use in popup
 if (typeof module !== 'undefined') {
   module.exports = { openTodaysSites };
 }

@@ -5,7 +5,8 @@ const {
   normalizeSiteLists,
   getCategoryKeyForDay,
   getDayKey,
-  getSitesToOpen
+  getSitesToOpen,
+  addSiteToList
 } = require('../shared/site-lists');
 
 // LOCKED: regression for v1.1.0 baseline
@@ -123,4 +124,70 @@ test('getSitesToOpen merges and de-duplicates everyday, category, and day lists'
     'https://b.com',
     'https://c.com'
   ]);
+});
+
+test('addSiteToList appends the url to the named list and reports added', () => {
+  const { siteLists, added } = addSiteToList({ monday: ['https://a.com'] }, 'monday', 'https://b.com');
+
+  assert.equal(added, true);
+  assert.deepEqual(siteLists.monday, ['https://a.com', 'https://b.com']);
+});
+
+test('addSiteToList rejects a url already in that list and leaves lists unchanged', () => {
+  const { siteLists, added } = addSiteToList({ monday: ['https://a.com'] }, 'monday', 'https://a.com');
+
+  assert.equal(added, false);
+  assert.deepEqual(siteLists.monday, ['https://a.com']);
+});
+
+test('addSiteToList allows the same url in a different list', () => {
+  const { siteLists, added } = addSiteToList({ monday: ['https://a.com'] }, 'everyday', 'https://a.com');
+
+  assert.equal(added, true);
+  assert.deepEqual(siteLists.everyday, ['https://a.com']);
+  assert.deepEqual(siteLists.monday, ['https://a.com']);
+});
+
+test('addSiteToList returns normalized lists and does not mutate its input', () => {
+  const input = { monday: ['https://a.com'], junk: ['x'] };
+  const { siteLists } = addSiteToList(input, 'monday', 'https://b.com');
+
+  assert.deepEqual(input, { monday: ['https://a.com'], junk: ['x'] });
+  assert.deepEqual(Object.keys(siteLists), validListKeys);
+  assert.equal(siteLists.junk, undefined);
+});
+
+test('addSiteToList handles missing lists and null input', () => {
+  const fromNull = addSiteToList(null, 'friday', 'https://a.com');
+  assert.equal(fromNull.added, true);
+  assert.deepEqual(fromNull.siteLists.friday, ['https://a.com']);
+
+  const fromEmpty = addSiteToList({}, 'friday', 'https://a.com');
+  assert.equal(fromEmpty.added, true);
+  assert.deepEqual(fromEmpty.siteLists.friday, ['https://a.com']);
+});
+
+test('addSiteToList rejects an unknown list key', () => {
+  const { siteLists, added } = addSiteToList({}, 'someday', 'https://a.com');
+
+  assert.equal(added, false);
+  assert.equal(siteLists.someday, undefined);
+});
+
+test('addSiteToList trims the url and treats a padded duplicate as already present', () => {
+  const padded = addSiteToList({ monday: ['https://a.com'] }, 'monday', '  https://a.com  ');
+  assert.equal(padded.added, false);
+  assert.deepEqual(padded.siteLists.monday, ['https://a.com']);
+
+  const fresh = addSiteToList({}, 'monday', '  https://b.com ');
+  assert.equal(fresh.added, true);
+  assert.deepEqual(fresh.siteLists.monday, ['https://b.com']);
+});
+
+test('addSiteToList rejects empty and non-string urls', () => {
+  for (const bad of ['', '   ', null, undefined, 42]) {
+    const { siteLists, added } = addSiteToList({}, 'monday', bad);
+    assert.equal(added, false, `expected ${JSON.stringify(bad)} to be rejected`);
+    assert.deepEqual(siteLists.monday, []);
+  }
 });

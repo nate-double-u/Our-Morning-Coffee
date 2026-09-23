@@ -5,6 +5,7 @@ function makeBrowserMock({ getResult }) {
   const mock = {
     _installedListener: null,
     _commandListener: null,
+    _messageListener: null,
     calls: {
       set: [],
       tabsCreate: [],
@@ -14,6 +15,11 @@ function makeBrowserMock({ getResult }) {
       onInstalled: {
         addListener(listener) {
           mock._installedListener = listener;
+        }
+      },
+      onMessage: {
+        addListener(listener) {
+          mock._messageListener = listener;
         }
       },
       getURL(path) {
@@ -160,6 +166,77 @@ test('onCommand listener ignores unknown commands', async () => {
 
   await browserMock._commandListener('some-other-command');
 
+  assert.deepEqual(browserMock.calls.tabsCreate, []);
+  assert.deepEqual(browserMock.calls.notifications, []);
+});
+
+test('openTodaysSites returns the number of sites opened and skips notification when notify is false', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: {
+        everyday: ['https://a.com', 'https://b.com']
+      }
+    }
+  });
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  const opened = await openTodaysSites(1, { notify: false });
+
+  assert.equal(opened, 2);
+  assert.equal(browserMock.calls.tabsCreate.length, 2);
+  assert.deepEqual(browserMock.calls.notifications, []);
+});
+
+test('openTodaysSites returns 0 when there are no sites for the day', async () => {
+  const browserMock = makeBrowserMock({ getResult: { siteLists: {} } });
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  const opened = await openTodaysSites(2, { notify: false });
+
+  assert.equal(opened, 0);
+  assert.deepEqual(browserMock.calls.tabsCreate, []);
+  assert.deepEqual(browserMock.calls.notifications, []);
+});
+
+test('onMessage listener opens today\'s sites for open-todays-sites and honors notify: false', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: {
+        everyday: ['https://a.com']
+      }
+    }
+  });
+  loadBackgroundWithBrowser(browserMock);
+
+  const opened = await browserMock._messageListener({ type: 'open-todays-sites', notify: false });
+
+  assert.equal(opened, 1);
+  assert.deepEqual(browserMock.calls.tabsCreate, [{ url: 'https://a.com', active: false }]);
+  assert.deepEqual(browserMock.calls.notifications, []);
+});
+
+test('onMessage listener notifies by default when notify is omitted', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: {
+        everyday: ['https://a.com']
+      }
+    }
+  });
+  loadBackgroundWithBrowser(browserMock);
+
+  await browserMock._messageListener({ type: 'open-todays-sites' });
+
+  assert.equal(browserMock.calls.notifications.length, 1);
+});
+
+test('onMessage listener ignores unrelated messages', async () => {
+  const browserMock = makeBrowserMock({ getResult: { siteLists: { everyday: ['https://a.com'] } } });
+  loadBackgroundWithBrowser(browserMock);
+
+  const result = await browserMock._messageListener({ type: 'something-else' });
+
+  assert.equal(result, undefined);
   assert.deepEqual(browserMock.calls.tabsCreate, []);
   assert.deepEqual(browserMock.calls.notifications, []);
 });

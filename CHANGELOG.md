@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Agent instructions (`.github/copilot-instructions.md`) and a locked-test convention; all v1.1.0 tests are locked as the baseline
 
+### Changed
+- Popup opens sites through the background script instead of its own copy of the logic
+- Storage access moved to `shared/storage.js`; duplicated add-site and day-name code removed
+
 ## [1.1.0] - 2026-04-02
 
 ### Added

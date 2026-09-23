@@ -58,6 +58,17 @@
     ])];
   }
 
+  // Returns { siteLists, added }. Lists are normalized; the input is not mutated.
+  function addSiteToList(siteLists, listKey, url) {
+    const normalized = normalizeSiteLists(siteLists);
+    const trimmed = typeof url === 'string' ? url.trim() : '';
+    if (!validListKeys.includes(listKey) || trimmed.length === 0 || normalized[listKey].includes(trimmed)) {
+      return { siteLists: normalized, added: false };
+    }
+    normalized[listKey].push(trimmed);
+    return { siteLists: normalized, added: true };
+  }
+
   return {
     dayKeys,
     listLabelByKey,
@@ -65,6 +76,7 @@
     validListKeys,
     getCategoryKeyForDay,
     getDayKey,
-    getSitesToOpen
+    getSitesToOpen,
+    addSiteToList
   };
 }));
