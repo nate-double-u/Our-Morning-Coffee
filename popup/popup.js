@@ -62,6 +62,13 @@ async function updatePopupInfo() {
   }
 }
 
+// Close the popup panel; keep the page open when launched in a normal tab so it can be bookmarked/reused.
+function closeIfPopup() {
+  if (!isTabMode) {
+    window.close();
+  }
+}
+
 async function openSites() {
   const opened = await browser.runtime.sendMessage({ type: 'open-todays-sites', notify: false });
   
@@ -69,10 +76,7 @@ async function openSites() {
     return;
   }
   
-  // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
-  if (!isTabMode) {
-    window.close();
-  }
+  closeIfPopup();
 }
 
 async function addCurrentTab() {
@@ -113,16 +117,11 @@ async function addCurrentTab() {
 function openOptions(e) {
   e.preventDefault();
   browser.runtime.openOptionsPage();
-  // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
-  if (!isTabMode) {
-    window.close();
-  }
+  closeIfPopup();
 }
 
 function openBookmarkableTab(e) {
   e.preventDefault();
   browser.tabs.create({ url: browser.runtime.getURL('popup/popup.html?mode=tab') });
-  if (!isTabMode) {
-    window.close();
-  }
+  closeIfPopup();
 }
