@@ -1,7 +1,7 @@
 // Options page script for Our Morning Coffee
 
 let currentDay = 'everyday';
-const { listLabelByKey: dayNames, validListKeys: validDays, normalizeSiteLists } = OurMorningCoffeeSiteLists;
+const { listLabelByKey: dayNames, validListKeys: validDays, normalizeSiteLists, addSiteToList } = OurMorningCoffeeSiteLists;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -122,25 +122,14 @@ async function addSite() {
     return;
   }
   
-  // Get current site lists
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = normalizeSiteLists(result.siteLists || {});
+  const { siteLists, added } = addSiteToList(result.siteLists, currentDay, url);
   
-  // Initialize the list if it doesn't exist
-  if (!siteLists[currentDay]) {
-    siteLists[currentDay] = [];
-  }
-  
-  // Check if URL already exists
-  if (siteLists[currentDay].includes(url)) {
+  if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  // Add the URL
-  siteLists[currentDay].push(url);
-  
-  // Save back to storage
   await browser.storage.local.set({ siteLists });
   
   // Clear input and reload

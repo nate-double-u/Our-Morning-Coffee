@@ -6,7 +6,8 @@ const {
   listLabelByKey,
   normalizeSiteLists,
   getCategoryKeyForDay,
-  getSitesToOpen
+  getSitesToOpen,
+  addSiteToList
 } = OurMorningCoffeeSiteLists;
 
 // Initialize popup
@@ -95,25 +96,14 @@ async function addCurrentTab() {
   // Get selected day
   const selectedDay = document.getElementById('day-selector').value;
   
-  // Get current site lists
   const result = await browser.storage.local.get('siteLists');
-  const siteLists = result.siteLists || {};
+  const { siteLists, added } = addSiteToList(result.siteLists, selectedDay, currentTab.url);
   
-  // Initialize the list if it doesn't exist
-  if (!siteLists[selectedDay]) {
-    siteLists[selectedDay] = [];
-  }
-  
-  // Check if URL already exists in this list
-  if (siteLists[selectedDay].includes(currentTab.url)) {
+  if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  // Add the URL
-  siteLists[selectedDay].push(currentTab.url);
-  
-  // Save back to storage
   await browser.storage.local.set({ siteLists });
   
   // Update the popup info
