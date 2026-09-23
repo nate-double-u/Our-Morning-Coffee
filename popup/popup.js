@@ -1,11 +1,11 @@
 // Popup script for Our Morning Coffee
 
-const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const isTabMode = new URLSearchParams(window.location.search).get('mode') === 'tab';
 const {
   listLabelByKey,
   normalizeSiteLists,
   getCategoryKeyForDay,
+  getDayKey,
   getSitesToOpen,
   addSiteToList
 } = OurMorningCoffeeSiteLists;
@@ -21,9 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('open-bookmarkable').addEventListener('click', openBookmarkableTab);
   
   // Set default day to today
-  const today = new Date().getDay();
-  const todayName = dayNames[today].toLowerCase();
-  document.getElementById('day-selector').value = todayName;
+  document.getElementById('day-selector').value = getDayKey(new Date().getDay());
 });
 
 async function updatePopupInfo() {
@@ -32,8 +30,8 @@ async function updatePopupInfo() {
   
   // Get current day
   const today = new Date().getDay();
-  const todayName = dayNames[today];
-  const todayKey = todayName.toLowerCase();
+  const todayKey = getDayKey(today);
+  const todayName = listLabelByKey[todayKey];
   const categoryKey = getCategoryKeyForDay(today);
   const categoryName = listLabelByKey[categoryKey];
   
@@ -44,7 +42,7 @@ async function updatePopupInfo() {
   const everydayCount = siteLists.everyday.length;
   const categoryCount = siteLists[categoryKey].length;
   const todayCount = siteLists[todayKey].length;
-  const totalCount = new Set([...siteLists.everyday, ...siteLists[categoryKey], ...siteLists[todayKey]]).size;
+  const totalCount = getSitesToOpen(siteLists, today).length;
   
   if (totalCount === 0) {
     document.getElementById('site-count').textContent = 'No sites configured for today';
