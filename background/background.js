@@ -27,6 +27,13 @@ browser.commands.onCommand.addListener(async (command) => {
   }
 });
 
+// Listen for requests from the popup
+browser.runtime.onMessage.addListener((message) => {
+  if (message && message.type === 'open-todays-sites') {
+    return openTodaysSites(undefined, { notify: message.notify !== false });
+  }
+});
+
 function notify(message) {
   browser.notifications.create({
     type: 'basic',
@@ -36,15 +43,17 @@ function notify(message) {
   });
 }
 
-// Function to open today's sites
-async function openTodaysSites(dayIndex = new Date().getDay()) {
+// Open today's sites in background tabs. Returns the number of sites opened.
+async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldNotify = true } = {}) {
   const result = await browser.storage.local.get('siteLists');
   const sitesToOpen = getSitesToOpen(result.siteLists || {}, dayIndex);
   const todayName = dayKeys[dayIndex];
   
   if (sitesToOpen.length === 0) {
-    notify('No sites configured for today. Add some in the options page!');
-    return;
+    if (shouldNotify) {
+      notify('No sites configured for today. Add some in the options page!');
+    }
+    return 0;
   }
   
   // Open each site in a new tab
@@ -52,10 +61,12 @@ async function openTodaysSites(dayIndex = new Date().getDay()) {
     await browser.tabs.create({ url: url, active: false });
   }
   
-  notify(`Opened ${sitesToOpen.length} site(s) for ${todayName}`);
+  if (shouldNotify) {
+    notify(`Opened ${sitesToOpen.length} site(s) for ${todayName}`);
+  }
+  return sitesToOpen.length;
 }
 
-// Export function for use in popup
 if (typeof module !== 'undefined') {
   module.exports = { openTodaysSites };
 }

@@ -65,17 +65,10 @@ async function updatePopupInfo() {
 }
 
 async function openSites() {
-  const result = await browser.storage.local.get('siteLists');
-  const today = new Date().getDay();
-  const sitesToOpen = getSitesToOpen(result.siteLists || {}, today);
+  const opened = await browser.runtime.sendMessage({ type: 'open-todays-sites', notify: false });
   
-  if (sitesToOpen.length === 0) {
+  if (!opened) {
     return;
-  }
-  
-  // Open each site in a new tab
-  for (const url of sitesToOpen) {
-    await browser.tabs.create({ url: url, active: false });
   }
   
   // Keep the page open when launched in a normal tab so it can be bookmarked/reused.
