@@ -108,13 +108,13 @@ async function loadSites() {
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'site-actions';
     
-    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(listKey, index, -1));
-    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(listKey, index, 1));
+    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(listKey, index, url, -1));
+    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(listKey, index, url, 1));
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => deleteSite(listKey, index));
+    deleteBtn.addEventListener('click', () => deleteSite(listKey, index, url));
     
     actionsDiv.appendChild(upBtn);
     actionsDiv.appendChild(downBtn);
@@ -138,12 +138,23 @@ function makeMoveButton(label, title, disabled, onClick) {
   return button;
 }
 
+// A queued change may run after an earlier one has shifted the list, so rows
+// carry the url they were rendered with. The rendered index wins while it still
+// holds that url (imports can leave duplicates); otherwise find the url.
+function findSiteIndex(list, index, url) {
+  return list[index] === url ? index : list.indexOf(url);
+}
+
 // Moves are disabled until the list re-renders, so rapid clicks cannot race
 // each other's read-modify-write. listKey is the list the row was rendered for.
-async function moveSiteBy(listKey, index, delta) {
+async function moveSiteBy(listKey, index, url, delta) {
   document.querySelectorAll('.move-btn').forEach((button) => { button.disabled = true; });
   await updateSiteLists(async (current, save) => {
-    const { siteLists, moved } = moveSite(current, listKey, index, delta);
+    const from = findSiteIndex(current[listKey], index, url);
+    if (from === -1) {
+      return;
+    }
+    const { siteLists, moved } = moveSite(current, listKey, from, delta);
     if (moved) {
       await save(siteLists);
     }
@@ -192,13 +203,17 @@ async function addSite() {
   await loadSites();
 }
 
-async function deleteSite(listKey, index) {
+async function deleteSite(listKey, index, url) {
   if (!confirm('Are you sure you want to delete this site?')) {
     return;
   }
   
   await updateSiteLists(async (siteLists, save) => {
-    siteLists[listKey].splice(index, 1);
+    const at = findSiteIndex(siteLists[listKey], index, url);
+    if (at === -1) {
+      return;
+    }
+    siteLists[listKey].splice(at, 1);
     await save(siteLists);
   });
   

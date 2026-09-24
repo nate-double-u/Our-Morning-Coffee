@@ -214,3 +214,39 @@ test('a delete that overlaps an in-flight move does not lose the move', async ()
   assert.deepEqual(page.data.siteLists.everyday, ['https://b.com', 'https://a.com']);
   assert.deepEqual(page.siteUrls(), ['https://b.com', 'https://a.com']);
 });
+
+// LOCKED: regression for #38 review (queued delete used a stale row index)
+test('a delete queued behind a move removes the clicked site, not whatever lands at its index', async () => {
+  const reads = makeHeldReads();
+  const page = await loadOptionsPage({ stored: { siteLists: lists }, hooks: reads.hooks });
+
+  reads.hold();
+  page.moveButtons(0).down.click(); // a down: b, a, c
+  await page.flush();
+  page.deleteButton(0).click(); // row 0 still shows a
+  await page.flush();
+
+  reads.releaseAll();
+  await page.flush();
+
+  assert.deepEqual(page.data.siteLists.everyday, ['https://b.com', 'https://c.com']);
+  assert.deepEqual(page.siteUrls(), ['https://b.com', 'https://c.com']);
+});
+
+// LOCKED: regression for #38 review (queued move used a stale row index)
+test('a move queued behind a delete moves the clicked site, not whatever lands at its index', async () => {
+  const reads = makeHeldReads();
+  const page = await loadOptionsPage({ stored: { siteLists: lists }, hooks: reads.hooks });
+
+  reads.hold();
+  page.deleteButton(0).click(); // delete a: b, c
+  await page.flush();
+  page.moveButtons(1).down.click(); // row 1 still shows b
+  await page.flush();
+
+  reads.releaseAll();
+  await page.flush();
+
+  assert.deepEqual(page.data.siteLists.everyday, ['https://c.com', 'https://b.com']);
+  assert.deepEqual(page.siteUrls(), ['https://c.com', 'https://b.com']);
+});
