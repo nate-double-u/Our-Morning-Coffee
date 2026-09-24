@@ -5,6 +5,7 @@ export default {
     'scratch',
     'test',
     'web-ext-artifacts',
+    'web-ext-config.mjs',
     'package.json',
     'package-lock.json',
     'CHANGELOG.md',
