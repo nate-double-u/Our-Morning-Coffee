@@ -53,15 +53,17 @@ Feature suggestions are welcome! Please open an issue with:
    # Run unit tests
    npm test
 
-   # Run in a clean Firefox profile (auto-reloads on file changes)
-   npx web-ext run
-
    # Validate the extension
    npx web-ext lint
 
    # Build the extension
    npx web-ext build
    ```
+
+   For manual testing, load the checkout as a temporary add-on via
+   `about:debugging#/runtime/this-firefox` and click **Reload** after each
+   change. `npx web-ext run` also works, but not alongside a running
+   Firefox; use Developer Edition (`--firefox=deved`) or quit Firefox first.
 
 6. **Commit your changes**. Keep messages short: a `type: description`
    subject line, and a body only if it adds something the diff doesn't say.
@@ -93,11 +95,12 @@ first.
 
 Before submitting a PR:
 
-1. Test the extension in a clean Firefox profile (`npx web-ext run`)
+1. Load the extension as a temporary add-on (`about:debugging`)
 2. Test all features:
    - Adding sites
-   - Opening sites
+   - Opening sites, with and without an empty current tab
    - Keyboard shortcut
+   - Reordering sites and the open order setting
    - Export/import
    - All day tabs
 3. Check browser console for errors

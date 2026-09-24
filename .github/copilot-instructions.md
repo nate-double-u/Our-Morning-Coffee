@@ -15,11 +15,12 @@ Guidance for AI coding agents working in this repository. Read alongside
 ```bash
 npm test            # unit tests (Node built-in runner, test/*.test.js)
 npx web-ext lint    # manifest and extension validation
-npx web-ext run     # load the extension in a clean Firefox profile
 ```
 
 CI runs `npm test` and `web-ext lint` on every PR
-(`.github/workflows/tests.yml`).
+(`.github/workflows/tests.yml`). Manual testing: the maintainer loads the
+checkout via `about:debugging`; do not suggest `npx web-ext run` as the
+default (it conflicts with a running Firefox).
 
 ## Locked tests
 
