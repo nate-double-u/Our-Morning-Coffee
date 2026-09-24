@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validListKeys } = require('../shared/site-lists');
-const { loadSiteLists, saveSiteLists, normalizeStoredSiteLists, loadSettings, saveSettings } = require('../shared/storage');
+const { loadSiteLists, saveSiteLists, updateSiteLists, normalizeStoredSiteLists, loadSettings, saveSettings } = require('../shared/storage');
 const { defaultSettings } = require('../shared/settings');
 
 function installStorageMock(stored) {
@@ -115,4 +115,63 @@ test('saveSettings does not touch siteLists', async () => {
 
   assert.equal(calls.set.length, 1);
   assert.equal('siteLists' in calls.set[0], false);
+});
+
+test('updateSiteLists passes normalized lists and a save function, and returns the callback result', async () => {
+  const calls = installStorageMock({ siteLists: { everyday: [' https://a.com '], monday: 'bad' } });
+
+  const result = await updateSiteLists(async (siteLists, save) => {
+    assert.deepEqual(siteLists.everyday, ['https://a.com']);
+    assert.deepEqual(siteLists.monday, []);
+    siteLists.everyday.push('https://b.com');
+    await save(siteLists);
+    return 'done';
+  });
+
+  assert.equal(result, 'done');
+  assert.equal(calls.set.length, 1);
+  assert.deepEqual(calls.set[0].siteLists.everyday, ['https://a.com', 'https://b.com']);
+});
+
+test('updateSiteLists does not write when the callback does not save', async () => {
+  const calls = installStorageMock({ siteLists: { everyday: ['https://a.com'] } });
+
+  await updateSiteLists(() => false);
+
+  assert.equal(calls.set.length, 0);
+});
+
+test('updateSiteLists runs overlapping updates one at a time, each seeing the previous result', async () => {
+  const stored = { siteLists: { everyday: ['https://a.com'] } };
+  installStorageMock(stored);
+  // Make set actually persist so the second update can observe the first
+  global.browser.storage.local.set = async (payload) => { Object.assign(stored, payload); };
+  let releaseFirst;
+  const firstHeld = new Promise((resolve) => { releaseFirst = resolve; });
+
+  const first = updateSiteLists(async (siteLists, save) => {
+    await firstHeld;
+    siteLists.everyday.push('https://b.com');
+    await save(siteLists);
+  });
+  const second = updateSiteLists(async (siteLists, save) => {
+    siteLists.everyday.push('https://c.com');
+    await save(siteLists);
+  });
+
+  releaseFirst();
+  await Promise.all([first, second]);
+
+  assert.deepEqual(stored.siteLists.everyday, ['https://a.com', 'https://b.com', 'https://c.com']);
+});
+
+test('updateSiteLists rejects when the callback throws and still runs the next update', async () => {
+  const calls = installStorageMock({ siteLists: { everyday: ['https://a.com'] } });
+
+  const failing = updateSiteLists(() => { throw new Error('boom'); });
+  const next = updateSiteLists((siteLists, save) => save(siteLists));
+
+  await assert.rejects(failing, /boom/);
+  await next;
+  assert.equal(calls.set.length, 1);
 });

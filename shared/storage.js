@@ -38,10 +38,21 @@
   const siteLists = makeStoredValue('siteLists', normalizeSiteLists);
   const settings = makeStoredValue('settings', normalizeSettings);
 
+  // Runs `update(siteLists, save)` with the current lists, one update at a
+  // time per page, so overlapping load-modify-save sequences cannot clobber
+  // each other. Resolves with whatever `update` returns.
+  let pendingUpdate = Promise.resolve();
+  function updateSiteLists(update) {
+    const run = pendingUpdate.then(async () => update(await siteLists.load(), siteLists.save));
+    pendingUpdate = run.catch(() => {});
+    return run;
+  }
+
   // Settings are additive: defaults apply on read, so no install-time write is needed.
   return {
     loadSiteLists: siteLists.load,
     saveSiteLists: siteLists.save,
+    updateSiteLists,
     normalizeStoredSiteLists: siteLists.normalizeStored,
     loadSettings: settings.load,
     saveSettings: settings.save
