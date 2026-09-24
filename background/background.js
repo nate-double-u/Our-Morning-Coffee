@@ -6,8 +6,12 @@ const siteListsModule = typeof OurMorningCoffeeSiteLists !== 'undefined'
 const storageModule = typeof OurMorningCoffeeStorage !== 'undefined'
   ? OurMorningCoffeeStorage
   : require('../shared/storage');
+const tabsModule = typeof OurMorningCoffeeTabs !== 'undefined'
+  ? OurMorningCoffeeTabs
+  : require('../shared/tabs');
 const { dayKeys, getSitesToOpen } = siteListsModule;
-const { loadSiteLists, normalizeStoredSiteLists } = storageModule;
+const { loadSiteLists, loadSettings, normalizeStoredSiteLists } = storageModule;
+const { isEmptyTabUrl } = tabsModule;
 
 // Keep stored data normalized across installs and updates
 browser.runtime.onInstalled.addListener(async () => {
@@ -37,6 +41,12 @@ function notify(message) {
   });
 }
 
+// The active tab in the current window, if it is showing an empty page.
+async function findActiveEmptyTab() {
+  const [activeTab] = await browser.tabs.query({ active: true, currentWindow: true });
+  return activeTab && isEmptyTabUrl(activeTab.url) ? activeTab : null;
+}
+
 // Open today's sites in background tabs. Returns the number of sites opened.
 async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldNotify = true } = {}) {
   const siteLists = await loadSiteLists();
@@ -50,8 +60,15 @@ async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldN
     return 0;
   }
   
-  // Open each site in a new tab
-  for (const url of sitesToOpen) {
+  const settings = await loadSettings();
+  const emptyTab = settings.fillEmptyTab ? await findActiveEmptyTab() : null;
+  const [first, ...rest] = sitesToOpen;
+  const newTabUrls = emptyTab ? rest : sitesToOpen;
+
+  if (emptyTab) {
+    await browser.tabs.update(emptyTab.id, { url: first });
+  }
+  for (const url of newTabUrls) {
     await browser.tabs.create({ url: url, active: false });
   }
   

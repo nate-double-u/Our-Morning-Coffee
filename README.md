@@ -93,7 +93,8 @@ Our Morning Coffee stores your website lists locally using Firefox's storage API
 When you click "Open Today's Sites" or use the keyboard shortcut:
 1. The extension checks what day it is
 2. It combines the "Every Day" list, today's group list (Weekdays/Weekends), and today's specific day list
-3. All URLs are opened in new tabs (in the background)
+3. If the current tab is a new or blank tab, the first URL loads there (you can turn this off in settings)
+4. The remaining URLs are opened in new tabs (in the background)
 
 ## Privacy
 

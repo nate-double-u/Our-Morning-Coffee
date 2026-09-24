@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Agent instructions (`.github/copilot-instructions.md`) and a locked-test convention; all v1.1.0 tests are locked as the baseline
-- Settings section on the options page: fill the current empty tab (default on) and open order (list or random). Stored under a new `settings` key; the controls take effect in a later release
+- Settings section on the options page: fill the current empty tab (default on) and open order (list or random). Stored under a new `settings` key; open order takes effect in a later release
+- When the active tab is a new or blank tab, the first site loads into it instead of leaving it open. Turn off with the "Use the current tab if it is empty" setting
 
 ### Changed
 - Popup opens sites through the background script instead of its own copy of the logic

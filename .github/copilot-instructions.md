@@ -72,9 +72,12 @@ are not locked unless the maintainer asks.
 - `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()` and
   `loadSettings()` / `saveSettings()`; the only place that reads or writes
   `browser.storage.local`. Always normalizes.
+- `shared/tabs.js`: `isEmptyTabUrl()`, the list of `about:` pages that count
+  as an empty tab. Unknown urls are not empty.
 - `background/background.js`: keyboard command, popup messages, and
   `openTodaysSites`. The popup opens sites by messaging the background, not
-  by calling `tabs.create` itself.
+  by calling `tabs.create` itself. Loads every `shared/` module; the manifest
+  `background.scripts` order must list dependencies first.
 - `popup/`, `options/`: UI; both load `shared/site-lists.js`,
   `shared/settings.js`, and `shared/storage.js`.
 - `test/`: Node built-in test runner. `background.test.js` mocks the
