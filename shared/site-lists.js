@@ -69,6 +69,20 @@
     return { siteLists: normalized, added: true };
   }
 
+  // Returns a new array in the requested open order. Unknown orders keep list order.
+  function orderSites(sites, openOrder, random = Math.random) {
+    const ordered = [...sites];
+    if (openOrder !== 'random') {
+      return ordered;
+    }
+    // Fisher-Yates shuffle
+    for (let i = ordered.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
+    }
+    return ordered;
+  }
+
   return {
     dayKeys,
     listLabelByKey,
@@ -77,6 +91,7 @@
     getCategoryKeyForDay,
     getDayKey,
     getSitesToOpen,
-    addSiteToList
+    addSiteToList,
+    orderSites
   };
 }));
