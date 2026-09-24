@@ -291,3 +291,40 @@ test('openTodaysSites leaves the active empty tab alone when fillEmptyTab is off
   assert.deepEqual(browserMock.calls.tabsUpdate, []);
   assert.deepEqual(browserMock.calls.tabsCreate, [{ url: 'https://a.com', active: false }]);
 });
+
+test('openTodaysSites shuffles the sites when openOrder is random', async (t) => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: { everyday: ['https://a.com', 'https://b.com', 'https://c.com', 'https://d.com'] },
+      settings: { fillEmptyTab: false, openOrder: 'random' }
+    }
+  });
+  // Always pick index 0: Fisher-Yates then yields b, c, d, a
+  t.mock.method(Math, 'random', () => 0);
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  await openTodaysSites(1, { notify: false });
+
+  assert.deepEqual(browserMock.calls.tabsCreate.map((call) => call.url), [
+    'https://b.com', 'https://c.com', 'https://d.com', 'https://a.com'
+  ]);
+});
+
+test('openTodaysSites fills the empty tab with the first shuffled site when openOrder is random', async (t) => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: { everyday: ['https://a.com', 'https://b.com', 'https://c.com', 'https://d.com'] },
+      settings: { fillEmptyTab: true, openOrder: 'random' }
+    },
+    activeTab: { id: 7, url: 'about:newtab' }
+  });
+  t.mock.method(Math, 'random', () => 0);
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  await openTodaysSites(1, { notify: false });
+
+  assert.deepEqual(browserMock.calls.tabsUpdate, [{ tabId: 7, url: 'https://b.com' }]);
+  assert.deepEqual(browserMock.calls.tabsCreate.map((call) => call.url), [
+    'https://c.com', 'https://d.com', 'https://a.com'
+  ]);
+});

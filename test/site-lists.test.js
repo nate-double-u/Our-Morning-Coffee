@@ -6,7 +6,9 @@ const {
   getCategoryKeyForDay,
   getDayKey,
   getSitesToOpen,
-  addSiteToList
+  addSiteToList,
+  orderSites,
+  moveSite
 } = require('../shared/site-lists');
 
 // LOCKED: regression for v1.1.0 baseline
@@ -190,4 +192,94 @@ test('addSiteToList rejects empty and non-string urls', () => {
     assert.equal(added, false, `expected ${JSON.stringify(bad)} to be rejected`);
     assert.deepEqual(siteLists.monday, []);
   }
+});
+
+test('orderSites with list order returns the sites unchanged, as a copy', () => {
+  const sites = ['https://a.com', 'https://b.com', 'https://c.com'];
+
+  const ordered = orderSites(sites, 'list');
+
+  assert.deepEqual(ordered, sites);
+  assert.notEqual(ordered, sites);
+});
+
+test('orderSites with random order shuffles using the supplied random source', () => {
+  const sites = ['https://a.com', 'https://b.com', 'https://c.com', 'https://d.com'];
+  // Fisher-Yates from the end: each call picks the index to swap with.
+  const picks = [0, 0, 0];
+  const random = () => picks.shift();
+
+  const ordered = orderSites(sites, 'random', random);
+
+  assert.deepEqual(ordered, ['https://b.com', 'https://c.com', 'https://d.com', 'https://a.com']);
+  assert.deepEqual(sites, ['https://a.com', 'https://b.com', 'https://c.com', 'https://d.com']);
+});
+
+test('orderSites with random order keeps every site exactly once', () => {
+  const sites = ['https://a.com', 'https://b.com', 'https://c.com', 'https://d.com', 'https://e.com'];
+
+  const ordered = orderSites(sites, 'random');
+
+  assert.deepEqual([...ordered].sort(), [...sites].sort());
+});
+
+test('orderSites falls back to list order for an unknown order', () => {
+  const sites = ['https://a.com', 'https://b.com'];
+
+  assert.deepEqual(orderSites(sites, 'sideways'), sites);
+  assert.deepEqual(orderSites(sites, undefined), sites);
+});
+
+test('orderSites handles empty and single-item lists', () => {
+  assert.deepEqual(orderSites([], 'random'), []);
+  assert.deepEqual(orderSites(['https://a.com'], 'random'), ['https://a.com']);
+});
+
+test('moveSite moves a site up one place and reports moved', () => {
+  const input = { everyday: ['https://a.com', 'https://b.com', 'https://c.com'] };
+
+  const { siteLists, moved } = moveSite(input, 'everyday', 2, -1);
+
+  assert.equal(moved, true);
+  assert.deepEqual(siteLists.everyday, ['https://a.com', 'https://c.com', 'https://b.com']);
+});
+
+test('moveSite moves a site down one place', () => {
+  const input = { everyday: ['https://a.com', 'https://b.com', 'https://c.com'] };
+
+  const { siteLists, moved } = moveSite(input, 'everyday', 0, 1);
+
+  assert.equal(moved, true);
+  assert.deepEqual(siteLists.everyday, ['https://b.com', 'https://a.com', 'https://c.com']);
+});
+
+test('moveSite refuses to move past either end and leaves the list unchanged', () => {
+  const input = { everyday: ['https://a.com', 'https://b.com'] };
+
+  const up = moveSite(input, 'everyday', 0, -1);
+  const down = moveSite(input, 'everyday', 1, 1);
+
+  assert.equal(up.moved, false);
+  assert.equal(down.moved, false);
+  assert.deepEqual(up.siteLists.everyday, ['https://a.com', 'https://b.com']);
+  assert.deepEqual(down.siteLists.everyday, ['https://a.com', 'https://b.com']);
+});
+
+test('moveSite rejects an out-of-range index, unknown list key, and zero delta', () => {
+  const input = { everyday: ['https://a.com', 'https://b.com'] };
+
+  assert.equal(moveSite(input, 'everyday', 5, -1).moved, false);
+  assert.equal(moveSite(input, 'everyday', -1, 1).moved, false);
+  assert.equal(moveSite(input, 'someday', 0, 1).moved, false);
+  assert.equal(moveSite(input, 'everyday', 0, 0).moved, false);
+});
+
+test('moveSite returns normalized lists and does not mutate its input', () => {
+  const input = { everyday: ['https://a.com', 'https://b.com'], monday: 'bad-value' };
+
+  const { siteLists } = moveSite(input, 'everyday', 0, 1);
+
+  assert.deepEqual(input.everyday, ['https://a.com', 'https://b.com']);
+  assert.deepEqual(siteLists.monday, []);
+  assert.deepEqual(Object.keys(siteLists), validListKeys);
 });

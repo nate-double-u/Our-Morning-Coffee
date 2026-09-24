@@ -9,7 +9,7 @@ const storageModule = typeof OurMorningCoffeeStorage !== 'undefined'
 const tabsModule = typeof OurMorningCoffeeTabs !== 'undefined'
   ? OurMorningCoffeeTabs
   : require('../shared/tabs');
-const { dayKeys, getSitesToOpen } = siteListsModule;
+const { dayKeys, getSitesToOpen, orderSites } = siteListsModule;
 const { loadSiteLists, loadSettings, normalizeStoredSiteLists } = storageModule;
 const { isEmptyTabUrl } = tabsModule;
 
@@ -62,8 +62,8 @@ async function openTodaysSites(dayIndex = new Date().getDay(), { notify: shouldN
   
   const settings = await loadSettings();
   const emptyTab = settings.fillEmptyTab ? await findActiveEmptyTab() : null;
-  const [first, ...rest] = sitesToOpen;
-  const newTabUrls = emptyTab ? rest : sitesToOpen;
+  const [first, ...rest] = orderSites(sitesToOpen, settings.openOrder);
+  const newTabUrls = emptyTab ? rest : [first, ...rest];
 
   if (emptyTab) {
     await browser.tabs.update(emptyTab.id, { url: first });

@@ -167,6 +167,26 @@ main {
   gap: 8px;
 }
 
+.move-btn {
+  padding: 6px 10px;
+  background: #f0e6dc;
+  color: #6F4E37;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.move-btn:hover:not(:disabled) {
+  background: #e2d2c2;
+}
+
+.move-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .delete-btn {
   padding: 6px 12px;
   background: #dc3545;
