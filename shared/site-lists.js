@@ -83,6 +83,22 @@
     return ordered;
   }
 
+  // Returns { siteLists, moved }. Swaps the site at index with its neighbour
+  // delta places away. Lists are normalized; the input is not mutated.
+  function moveSite(siteLists, listKey, index, delta) {
+    const normalized = normalizeSiteLists(siteLists);
+    if (!validListKeys.includes(listKey)) {
+      return { siteLists: normalized, moved: false };
+    }
+    const list = normalized[listKey];
+    const target = index + delta;
+    if (delta === 0 || index < 0 || index >= list.length || target < 0 || target >= list.length) {
+      return { siteLists: normalized, moved: false };
+    }
+    [list[index], list[target]] = [list[target], list[index]];
+    return { siteLists: normalized, moved: true };
+  }
+
   return {
     dayKeys,
     listLabelByKey,
@@ -92,6 +108,7 @@
     getDayKey,
     getSitesToOpen,
     addSiteToList,
-    orderSites
+    orderSites,
+    moveSite
   };
 }));

@@ -1,7 +1,7 @@
 // Options page script for Our Morning Coffee
 
 let currentDay = 'everyday';
-const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList } = OurMorningCoffeeSiteLists;
+const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList, moveSite } = OurMorningCoffeeSiteLists;
 const { loadSiteLists, saveSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
 
 // Initialize options page
@@ -104,11 +104,16 @@ async function loadSites() {
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'site-actions';
     
+    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(index, -1));
+    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(index, 1));
+    
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Delete';
     deleteBtn.addEventListener('click', () => deleteSite(index));
     
+    actionsDiv.appendChild(upBtn);
+    actionsDiv.appendChild(downBtn);
     actionsDiv.appendChild(deleteBtn);
     
     li.appendChild(urlDiv);
@@ -116,6 +121,26 @@ async function loadSites() {
     
     container.appendChild(li);
   });
+}
+
+function makeMoveButton(label, title, disabled, onClick) {
+  const button = document.createElement('button');
+  button.className = 'move-btn';
+  button.textContent = label;
+  button.title = title;
+  button.setAttribute('aria-label', title);
+  button.disabled = disabled;
+  button.addEventListener('click', onClick);
+  return button;
+}
+
+async function moveSiteBy(index, delta) {
+  const { siteLists, moved } = moveSite(await loadSiteLists(), currentDay, index, delta);
+  if (!moved) {
+    return;
+  }
+  await saveSiteLists(siteLists);
+  await loadSites();
 }
 
 async function addSite() {
