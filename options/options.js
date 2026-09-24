@@ -75,8 +75,9 @@ async function switchTab(day) {
 }
 
 async function loadSites() {
+  const listKey = currentDay;
   const siteLists = await loadSiteLists();
-  const sites = siteLists[currentDay] || [];
+  const sites = siteLists[listKey] || [];
   
   const container = document.getElementById('sites-container');
   const countSpan = document.getElementById('site-count');
@@ -104,8 +105,8 @@ async function loadSites() {
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'site-actions';
     
-    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(index, -1));
-    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(index, 1));
+    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(listKey, index, -1));
+    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(listKey, index, 1));
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
@@ -134,12 +135,14 @@ function makeMoveButton(label, title, disabled, onClick) {
   return button;
 }
 
-async function moveSiteBy(index, delta) {
-  const { siteLists, moved } = moveSite(await loadSiteLists(), currentDay, index, delta);
-  if (!moved) {
-    return;
+// Moves are disabled until the list re-renders, so rapid clicks cannot race
+// each other's read-modify-write. listKey is the list the row was rendered for.
+async function moveSiteBy(listKey, index, delta) {
+  document.querySelectorAll('.move-btn').forEach((button) => { button.disabled = true; });
+  const { siteLists, moved } = moveSite(await loadSiteLists(), listKey, index, delta);
+  if (moved) {
+    await saveSiteLists(siteLists);
   }
-  await saveSiteLists(siteLists);
   await loadSites();
 }
 
