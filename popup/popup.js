@@ -8,7 +8,7 @@ const {
   getSitesToOpen,
   addSiteToList
 } = OurMorningCoffeeSiteLists;
-const { loadSiteLists, saveSiteLists } = OurMorningCoffeeStorage;
+const { loadSiteLists, updateSiteLists } = OurMorningCoffeeStorage;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -97,14 +97,18 @@ async function addCurrentTab() {
   // Get selected day
   const selectedDay = document.getElementById('day-selector').value;
   
-  const { siteLists, added } = addSiteToList(await loadSiteLists(), selectedDay, currentTab.url);
+  const added = await updateSiteLists(async (current, save) => {
+    const result = addSiteToList(current, selectedDay, currentTab.url);
+    if (result.added) {
+      await save(result.siteLists);
+    }
+    return result.added;
+  });
   
   if (!added) {
     alert('This site is already in the list');
     return;
   }
-  
-  await saveSiteLists(siteLists);
   
   // Update the popup info
   await updatePopupInfo();

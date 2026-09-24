@@ -15,11 +15,12 @@ Guidance for AI coding agents working in this repository. Read alongside
 ```bash
 npm test            # unit tests (Node built-in runner, test/*.test.js)
 npx web-ext lint    # manifest and extension validation
-npx web-ext run     # load the extension in a clean Firefox profile
 ```
 
 CI runs `npm test` and `web-ext lint` on every PR
-(`.github/workflows/tests.yml`).
+(`.github/workflows/tests.yml`). Manual testing: the maintainer loads the
+checkout via `about:debugging`; do not suggest `npx web-ext run` as the
+default (it conflicts with a running Firefox).
 
 ## Locked tests
 
@@ -73,7 +74,10 @@ are not locked unless the maintainer asks.
   new setting here with a default; storage applies defaults on read.
 - `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()` and
   `loadSettings()` / `saveSettings()`; the only place that reads or writes
-  `browser.storage.local`. Always normalizes.
+  `browser.storage.local`. Always normalizes. UI code that changes a site
+  list (add, delete, move, import) goes through `updateSiteLists(update)`,
+  which runs read-modify-write callbacks one at a time so overlapping clicks
+  do not lose each other's writes.
 - `shared/tabs.js`: `isEmptyTabUrl()`, the list of `about:` pages that count
   as an empty tab. Unknown urls are not empty.
 - `background/background.js`: keyboard command, popup messages, and
@@ -83,7 +87,9 @@ are not locked unless the maintainer asks.
 - `popup/`, `options/`: UI; both load `shared/site-lists.js`,
   `shared/settings.js`, and `shared/storage.js`.
 - `test/`: Node built-in test runner. `background.test.js` mocks the
-  `browser` global.
+  `browser` global. `options.test.js` drives the real options page in jsdom
+  via `test/helpers/options-page.js` (fake `browser.storage.local` with
+  hooks to hold reads/writes open). jsdom is the only dependency, dev-only.
 
 ## Compatibility
 

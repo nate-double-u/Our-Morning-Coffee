@@ -4,15 +4,14 @@ An open-source Firefox extension that opens your favorite websites each morning.
 
 ## Features
 
-- **Daily Website Lists**: Create lists for Every Day, Weekdays, Weekends, and each day of the week (Sunday - Saturday)
-- **Every Day List**: Sites that open every day, regardless of the day of the week
-- **Quick Access**: Open all of today's sites from the popup or with a keyboard shortcut
-- **Bookmark Toolbar Friendly**: Open in a bookmarkable tab for quick toolbar access
-- **Keyboard Shortcut**: Press `Ctrl+Shift+U` (Windows/Linux) or `Cmd+Shift+U` (Mac) to open today's sites
-- **Easy Management**: Add sites directly from the popup or manage them in the settings page
-- **Import/Export**: Backup and restore your site lists as JSON files
-- **Privacy-Focused**: All data is stored locally in your browser
-- **Open Source**: Fully transparent, auditable code
+- **Daily Website Lists**: Every Day, Weekdays, Weekends, and each day of the week
+- **One Click or Keystroke**: Open today's sites from the popup, a bookmarkable tab, or `Ctrl+Shift+U` (`Cmd+Shift+U` on Mac)
+- **Your Order or Random**: Sites open as arranged in your lists, or shuffled
+- **No Stray Blank Tab**: If the current tab is empty, the first site loads there
+- **Easy Management**: Add the current tab from the popup, or manage lists in the settings page
+- **Import/Export**: Back up and restore your lists as JSON
+- **Local and Private**: Everything stays in your browser; no accounts, no tracking
+- **Open Source**: Apache-2.0 code, CC-BY-4.0 docs
 
 ## Installation
 
@@ -25,17 +24,11 @@ Install directly from the [Mozilla Add-ons page](https://addons.mozilla.org/en-C
 1. Clone this repository:
    ```bash
    git clone https://github.com/nate-double-u/Our-Morning-Coffee.git
-   cd Our-Morning-Coffee
    ```
 
-2. Launch Firefox with the extension loaded:
-   ```bash
-   npx web-ext run
-   ```
+2. In Firefox, open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `manifest.json`. Click **Reload** on the card after editing source files. The add-on is removed when Firefox quits.
 
-   This opens a clean Firefox profile with the extension installed and the toolbar button visible. The extension reloads automatically when you edit source files.
-
-   Alternatively, you can load the extension manually via `about:debugging` → "This Firefox" → "Load Temporary Add-on" → select `manifest.json`.
+   Alternatively, `npx web-ext run` starts a separate Firefox profile with the extension loaded and auto-reload. It does not work well while your regular Firefox is running; use Firefox Developer Edition (`--firefox=deved`) or quit Firefox first.
 
 ### Building and Signing
 
@@ -87,6 +80,13 @@ If you want to self-host or distribute a signed build:
 - **Export Data**: Click "Export Data" to save your lists as a JSON file
 - **Import Data**: Click "Import Data" to restore lists from a backup
 
+### Settings
+
+On the settings page, below the lists:
+
+- **Use the current tab if it is empty** (default on): load the first site into the active tab when it is a new or blank tab
+- **Open order**: "As arranged in your lists" (default) or "Random"
+
 ## How It Works
 
 Our Morning Coffee stores your website lists locally using Firefox's storage API. It supports an "Every Day" list, grouped "Weekdays"/"Weekends" lists, and each day of the week.
@@ -100,31 +100,29 @@ When you click "Open Today's Sites" or use the keyboard shortcut:
 
 ## Privacy
 
-- **No Data Collection**: This extension does not collect any user data
-- **Local Storage**: All your website lists are stored locally in your browser
-- **No Network Requests**: The extension doesn't make any external network requests
-- **No Analytics**: No tracking or analytics of any kind
+- **No Data Collection**: The extension does not collect or send any user data
+- **Local Storage**: Your lists and settings live in your browser's local extension storage
+- **No Network Requests of Its Own**: The only connections made are to the sites you open
+- **No Analytics**: No tracking of any kind
 
 ## Development
 
-The extension is built with vanilla JavaScript using Firefox's WebExtension APIs:
+Vanilla JavaScript on Firefox's WebExtension APIs:
 
-- `browser.storage.local` - For storing site lists
-- `browser.tabs` - For opening tabs
-- `browser.commands` - For keyboard shortcuts
-- `browser.notifications` - For user feedback
+- `browser.storage.local` - site lists and settings
+- `browser.tabs` - opening and filling tabs
+- `browser.commands` - keyboard shortcut
+- `browser.notifications` - user feedback
 
-No bundlers or transpilers are needed — the code runs directly in the browser. The `web-ext` CLI is used for local development (`npx web-ext run`), linting, and packaging.
+No bundlers or transpilers; the code runs directly in the browser. `web-ext` handles linting and packaging.
 
 ### Testing
-
-Run the unit tests with:
 
 ```bash
 npm test
 ```
 
-Tests use Node's built-in test runner and cover shared site-list logic plus background behavior.
+Tests use Node's built-in test runner and cover the shared modules and the background script. Tests tagged `// LOCKED:` guard released behavior; see `CONTRIBUTING.md`.
 
 ### CI
 

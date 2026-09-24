@@ -2,7 +2,7 @@
 
 let currentDay = 'everyday';
 const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList, moveSite } = OurMorningCoffeeSiteLists;
-const { loadSiteLists, saveSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
+const { loadSiteLists, updateSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -108,13 +108,13 @@ async function loadSites() {
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'site-actions';
     
-    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(listKey, index, -1));
-    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(listKey, index, 1));
+    const upBtn = makeMoveButton('\u2191', 'Move up', index === 0, () => moveSiteBy(listKey, index, url, -1));
+    const downBtn = makeMoveButton('\u2193', 'Move down', index === sites.length - 1, () => moveSiteBy(listKey, index, url, 1));
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => deleteSite(index));
+    deleteBtn.addEventListener('click', () => deleteSite(listKey, index, url));
     
     actionsDiv.appendChild(upBtn);
     actionsDiv.appendChild(downBtn);
@@ -138,14 +138,27 @@ function makeMoveButton(label, title, disabled, onClick) {
   return button;
 }
 
+// A queued change may run after an earlier one has shifted the list, so rows
+// carry the url they were rendered with. The rendered index wins while it still
+// holds that url (imports can leave duplicates); otherwise find the url.
+function findSiteIndex(list, index, url) {
+  return list[index] === url ? index : list.indexOf(url);
+}
+
 // Moves are disabled until the list re-renders, so rapid clicks cannot race
 // each other's read-modify-write. listKey is the list the row was rendered for.
-async function moveSiteBy(listKey, index, delta) {
+async function moveSiteBy(listKey, index, url, delta) {
   document.querySelectorAll('.move-btn').forEach((button) => { button.disabled = true; });
-  const { siteLists, moved } = moveSite(await loadSiteLists(), listKey, index, delta);
-  if (moved) {
-    await saveSiteLists(siteLists);
-  }
+  await updateSiteLists(async (current, save) => {
+    const from = findSiteIndex(current[listKey], index, url);
+    if (from === -1) {
+      return;
+    }
+    const { siteLists, moved } = moveSite(current, listKey, from, delta);
+    if (moved) {
+      await save(siteLists);
+    }
+  });
   await loadSites();
 }
 
@@ -171,33 +184,38 @@ async function addSite() {
     return;
   }
   
-  const { siteLists, added } = addSiteToList(await loadSiteLists(), currentDay, url);
+  const listKey = currentDay;
+  const added = await updateSiteLists(async (current, save) => {
+    const result = addSiteToList(current, listKey, url);
+    if (result.added) {
+      await save(result.siteLists);
+    }
+    return result.added;
+  });
   
   if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  await saveSiteLists(siteLists);
-  
   // Clear input and reload
   input.value = '';
   await loadSites();
 }
 
-async function deleteSite(index) {
+async function deleteSite(listKey, index, url) {
   if (!confirm('Are you sure you want to delete this site?')) {
     return;
   }
   
-  const siteLists = await loadSiteLists();
-  
-  // Remove the site
-  if (siteLists[currentDay]) {
-    siteLists[currentDay].splice(index, 1);
-  }
-  
-  await saveSiteLists(siteLists);
+  await updateSiteLists(async (siteLists, save) => {
+    const at = findSiteIndex(siteLists[listKey], index, url);
+    if (at === -1) {
+      return;
+    }
+    siteLists[listKey].splice(at, 1);
+    await save(siteLists);
+  });
   
   // Reload sites
   await loadSites();
@@ -241,7 +259,7 @@ async function importData(event) {
     }
     
     // Save the imported data
-    await saveSiteLists(importedData);
+    await updateSiteLists((_, save) => save(importedData));
     
     // Reload the current view
     await loadSites();
