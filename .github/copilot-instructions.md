@@ -84,7 +84,9 @@ are not locked unless the maintainer asks.
 - `popup/`, `options/`: UI; both load `shared/site-lists.js`,
   `shared/settings.js`, and `shared/storage.js`.
 - `test/`: Node built-in test runner. `background.test.js` mocks the
-  `browser` global.
+  `browser` global. `options.test.js` drives the real options page in jsdom
+  via `test/helpers/options-page.js` (fake `browser.storage.local` with
+  hooks to hold reads/writes open). jsdom is the only dependency, dev-only.
 
 ## Compatibility
 
