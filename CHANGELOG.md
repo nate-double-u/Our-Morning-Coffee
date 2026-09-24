@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings section on the options page: fill the current empty tab (default on) and open order (list or random). Stored under a new `settings` key
 - When the active tab is a new or blank tab, the first site loads into it instead of leaving it open. Turn off with the "Use the current tab if it is empty" setting
 - Open order: sites open as arranged in your lists (default) or shuffled. Up/down arrows on the options page reorder sites within a list
+- Light toolbar icon for dark Firefox themes (`theme_icons`)
 
 ### Changed
 - Popup opens sites through the background script instead of its own copy of the logic

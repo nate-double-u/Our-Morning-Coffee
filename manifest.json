@@ -30,7 +30,16 @@
   },
   
   "browser_action": {
-    "default_icon": "icons/coffee-48.png",
+    "default_icon": {
+      "48": "icons/coffee-48.png"
+    },
+    "theme_icons": [
+      {
+        "light": "icons/coffee-48-light.svg",
+        "dark": "icons/coffee-48.svg",
+        "size": 48
+      }
+    ],
     "default_title": "Our Morning Coffee",
     "default_popup": "popup/popup.html",
     "default_area": "navbar"
