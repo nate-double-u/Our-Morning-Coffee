@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-function makeBrowserMock({ getResult }) {
+function makeBrowserMock({ getResult, activeTab }) {
   const mock = {
     _installedListener: null,
     _commandListener: null,
@@ -9,6 +9,7 @@ function makeBrowserMock({ getResult }) {
     calls: {
       set: [],
       tabsCreate: [],
+      tabsUpdate: [],
       notifications: []
     },
     runtime: {
@@ -44,8 +45,14 @@ function makeBrowserMock({ getResult }) {
       }
     },
     tabs: {
+      async query() {
+        return activeTab ? [activeTab] : [];
+      },
       async create(payload) {
         mock.calls.tabsCreate.push(payload);
+      },
+      async update(tabId, payload) {
+        mock.calls.tabsUpdate.push({ tabId, ...payload });
       }
     },
     notifications: {
@@ -239,4 +246,48 @@ test('onMessage listener ignores unrelated messages', async () => {
   assert.equal(result, undefined);
   assert.deepEqual(browserMock.calls.tabsCreate, []);
   assert.deepEqual(browserMock.calls.notifications, []);
+});
+
+test('openTodaysSites fills the active empty tab with the first site and opens the rest in background tabs', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: { siteLists: { everyday: ['https://a.com', 'https://b.com'] } },
+    activeTab: { id: 7, url: 'about:newtab' }
+  });
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  const opened = await openTodaysSites(1);
+
+  assert.deepEqual(browserMock.calls.tabsUpdate, [{ tabId: 7, url: 'https://a.com' }]);
+  assert.deepEqual(browserMock.calls.tabsCreate, [{ url: 'https://b.com', active: false }]);
+  assert.equal(opened, 2);
+  assert.match(browserMock.calls.notifications[0].message, /Opened 2 site\(s\)/);
+});
+
+test('openTodaysSites leaves the active tab alone when it shows a real page', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: { siteLists: { everyday: ['https://a.com'] } },
+    activeTab: { id: 7, url: 'https://example.com' }
+  });
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  await openTodaysSites(1, { notify: false });
+
+  assert.deepEqual(browserMock.calls.tabsUpdate, []);
+  assert.deepEqual(browserMock.calls.tabsCreate, [{ url: 'https://a.com', active: false }]);
+});
+
+test('openTodaysSites leaves the active empty tab alone when fillEmptyTab is off', async () => {
+  const browserMock = makeBrowserMock({
+    getResult: {
+      siteLists: { everyday: ['https://a.com'] },
+      settings: { fillEmptyTab: false }
+    },
+    activeTab: { id: 7, url: 'about:newtab' }
+  });
+  const { openTodaysSites } = loadBackgroundWithBrowser(browserMock);
+
+  await openTodaysSites(1, { notify: false });
+
+  assert.deepEqual(browserMock.calls.tabsUpdate, []);
+  assert.deepEqual(browserMock.calls.tabsCreate, [{ url: 'https://a.com', active: false }]);
 });
