@@ -67,6 +67,8 @@ are not locked unless the maintainer asks.
 
 - `shared/site-lists.js`: pure list logic, UMD (CommonJS for tests, global
   `OurMorningCoffeeSiteLists` in the browser). Put testable logic here.
+  List edits (`addSiteToList`, `moveSite`) return `{ siteLists, <flag> }`
+  and never mutate their input; `orderSites` takes an injectable RNG.
 - `shared/settings.js`: `defaultSettings` and `normalizeSettings()`. Add a
   new setting here with a default; storage applies defaults on read.
 - `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()` and

@@ -82,6 +82,7 @@ If you want to self-host or distribute a signed build:
 ### Managing Your Lists
 
 - **Switch Days**: Click the day tabs to view and manage different day lists
+- **Reorder Sites**: Use the up and down arrows to arrange the order within a list
 - **Delete Sites**: Click the "Delete" button next to any site
 - **Export Data**: Click "Export Data" to save your lists as a JSON file
 - **Import Data**: Click "Import Data" to restore lists from a backup
@@ -92,9 +93,10 @@ Our Morning Coffee stores your website lists locally using Firefox's storage API
 
 When you click "Open Today's Sites" or use the keyboard shortcut:
 1. The extension checks what day it is
-2. It combines the "Every Day" list, today's group list (Weekdays/Weekends), and today's specific day list
-3. If the current tab is a new or blank tab, the first URL loads there (you can turn this off in settings)
-4. The remaining URLs are opened in new tabs (in the background)
+2. It combines the "Every Day" list, today's group list (Weekdays/Weekends), and today's specific day list, in that order
+3. If open order is set to Random in settings, the combined list is shuffled
+4. If the current tab is a new or blank tab, the first URL loads there (you can turn this off in settings)
+5. The remaining URLs are opened in new tabs (in the background)
 
 ## Privacy
 
