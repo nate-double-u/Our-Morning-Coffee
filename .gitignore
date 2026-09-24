@@ -17,9 +17,8 @@ Thumbs.db
 *.zip
 web-ext-artifacts/
 
-# Node modules (if added in the future)
+# Node modules
 node_modules/
-package-lock.json
 
 # Python virtual environment (used for icon generation)
 venv/
