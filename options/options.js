@@ -77,6 +77,9 @@ async function switchTab(day) {
 async function loadSites() {
   const listKey = currentDay;
   const siteLists = await loadSiteLists();
+  if (listKey !== currentDay) {
+    return; // the user switched tabs while we were loading; a newer load will render
+  }
   const sites = siteLists[listKey] || [];
   
   const container = document.getElementById('sites-container');
