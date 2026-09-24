@@ -2,7 +2,7 @@
 
 let currentDay = 'everyday';
 const { listLabelByKey: dayNames, validListKeys: validDays, addSiteToList, moveSite } = OurMorningCoffeeSiteLists;
-const { loadSiteLists, saveSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
+const { loadSiteLists, updateSiteLists, loadSettings, saveSettings } = OurMorningCoffeeStorage;
 
 // Initialize options page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -114,7 +114,7 @@ async function loadSites() {
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => deleteSite(index));
+    deleteBtn.addEventListener('click', () => deleteSite(listKey, index));
     
     actionsDiv.appendChild(upBtn);
     actionsDiv.appendChild(downBtn);
@@ -142,10 +142,12 @@ function makeMoveButton(label, title, disabled, onClick) {
 // each other's read-modify-write. listKey is the list the row was rendered for.
 async function moveSiteBy(listKey, index, delta) {
   document.querySelectorAll('.move-btn').forEach((button) => { button.disabled = true; });
-  const { siteLists, moved } = moveSite(await loadSiteLists(), listKey, index, delta);
-  if (moved) {
-    await saveSiteLists(siteLists);
-  }
+  await updateSiteLists(async (current, save) => {
+    const { siteLists, moved } = moveSite(current, listKey, index, delta);
+    if (moved) {
+      await save(siteLists);
+    }
+  });
   await loadSites();
 }
 
@@ -171,33 +173,34 @@ async function addSite() {
     return;
   }
   
-  const { siteLists, added } = addSiteToList(await loadSiteLists(), currentDay, url);
+  const listKey = currentDay;
+  const added = await updateSiteLists(async (current, save) => {
+    const result = addSiteToList(current, listKey, url);
+    if (result.added) {
+      await save(result.siteLists);
+    }
+    return result.added;
+  });
   
   if (!added) {
     alert('This site is already in the list');
     return;
   }
   
-  await saveSiteLists(siteLists);
-  
   // Clear input and reload
   input.value = '';
   await loadSites();
 }
 
-async function deleteSite(index) {
+async function deleteSite(listKey, index) {
   if (!confirm('Are you sure you want to delete this site?')) {
     return;
   }
   
-  const siteLists = await loadSiteLists();
-  
-  // Remove the site
-  if (siteLists[currentDay]) {
-    siteLists[currentDay].splice(index, 1);
-  }
-  
-  await saveSiteLists(siteLists);
+  await updateSiteLists(async (siteLists, save) => {
+    siteLists[listKey].splice(index, 1);
+    await save(siteLists);
+  });
   
   // Reload sites
   await loadSites();
@@ -241,7 +244,7 @@ async function importData(event) {
     }
     
     // Save the imported data
-    await saveSiteLists(importedData);
+    await updateSiteLists((_, save) => save(importedData));
     
     // Reload the current view
     await loadSites();

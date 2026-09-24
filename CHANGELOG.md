@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Popup opens sites through the background script instead of its own copy of the logic
 - Storage access moved to `shared/storage.js`; duplicated add-site and day-name code removed
 
+### Fixed
+- Rapid add, delete, move, or import actions on the options page no longer overwrite each other; list changes run one at a time
+
 ## [1.1.0] - 2026-04-02
 
 ### Added

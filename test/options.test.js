@@ -196,3 +196,21 @@ test('a stale list load that finishes after a tab switch does not overwrite the 
   assert.equal(page.document.getElementById('current-day-title').textContent, 'Weekends');
   assert.deepEqual(page.siteUrls(), ['https://w.com']);
 });
+
+// LOCKED: regression for #37 review (serialize list mutations)
+test('a delete that overlaps an in-flight move does not lose the move', async () => {
+  const reads = makeHeldReads();
+  const page = await loadOptionsPage({ stored: { siteLists: lists }, hooks: reads.hooks });
+
+  reads.hold();
+  page.moveButtons(0).down.click(); // a down: expect b, a, c
+  await page.flush();
+  page.deleteButton(2).click(); // delete c
+  await page.flush();
+
+  reads.releaseAll();
+  await page.flush();
+
+  assert.deepEqual(page.data.siteLists.everyday, ['https://b.com', 'https://a.com']);
+  assert.deepEqual(page.siteUrls(), ['https://b.com', 'https://a.com']);
+});

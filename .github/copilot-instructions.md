@@ -74,7 +74,10 @@ are not locked unless the maintainer asks.
   new setting here with a default; storage applies defaults on read.
 - `shared/storage.js`: `loadSiteLists()` / `saveSiteLists()` and
   `loadSettings()` / `saveSettings()`; the only place that reads or writes
-  `browser.storage.local`. Always normalizes.
+  `browser.storage.local`. Always normalizes. UI code that changes a site
+  list (add, delete, move, import) goes through `updateSiteLists(update)`,
+  which runs read-modify-write callbacks one at a time so overlapping clicks
+  do not lose each other's writes.
 - `shared/tabs.js`: `isEmptyTabUrl()`, the list of `about:` pages that count
   as an empty tab. Unknown urls are not empty.
 - `background/background.js`: keyboard command, popup messages, and
